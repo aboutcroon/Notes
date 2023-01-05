@@ -61,7 +61,7 @@ $ npx webpack --mode=production
 
 最终打包后的文件如图
 
-![bundle1](Webpack打包结果优化.assets/bundle1-3310328.png)
+![bundle1](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle1.png)
 
 可以看到，打包完成后的 bundle.js 文件中，我们上述提到的冗余代码（即dead-code）就并不会输出，这就是经过 Tree shaking 处理之后的效果。
 
@@ -90,11 +90,11 @@ $ npx webpack --mode=none
 
 components.js 对应模块
 
-![bundle2](Webpack打包结果优化.assets/bundle2.png)
+![bundle2](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle2.png)
 
 main.js 对应模块
 
-![bundle3](Webpack打包结果优化.assets/bundle3.png)
+![bundle3](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle3.png)
 
 可以看到，源代码中的一个模块就对应这里的一个函数，这里 components 对应的这个模块，虽然外部没有使用这里的 Link 函数和 Heading 函数，但是仍然导出了它们。
 
@@ -117,7 +117,7 @@ module.exports = {
 
 配置完成后我们再重新进行打包，再来看一下输出的 bundle.js：
 
-![bundle4](Webpack打包结果优化.assets/bundle4.png)
+![bundle4](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle4.png)
 
 虽然 bundle.js 文件中还会出现 Link 和 Heading 这两个函数，但他们不再被导出了，没有任何地方依赖这些代码（vscode中代码颜色变淡，表示未被引用），那它们对应的代码就变成了 **未引用代码**。
 
@@ -142,7 +142,7 @@ module.exports = {
 
 然后重新进行打包，结果如下：
 
-![bundle5](Webpack打包结果优化.assets/bundle5.png)
+![bundle5](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle5.png)
 
 可以发现，Link 和 Heading 这些未引用代码就都被自动移除了。
 
@@ -182,13 +182,13 @@ module.exports = {
 
 打包结果如图所示：
 
-![bundle6](Webpack打包结果优化.assets/bundle6.png)
+![bundle6](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle6.png)
 
 
 
 如果我们同时再将 minimize 置为 true，打包结果的体积又会减小很多：
 
-![bundle7](Webpack打包结果优化.assets/bundle7.png)
+![bundle7](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle7.png)
 
 
 
@@ -313,7 +313,7 @@ module.exports = {
 
 打包结果如下：
 
-![bundle8](Webpack打包结果优化.assets/bundle8.png)
+![bundle8](https://raw.githubusercontent.com/aboutcroon/Notes/main/Webpack/assets/bundle8.png)
 
 从打包结果可以看到，所有的组件模块都被打包进了 bundle.js，即使我们开启 Tree-shaking 特性，这些模块也**不会完全被移除**。
 
