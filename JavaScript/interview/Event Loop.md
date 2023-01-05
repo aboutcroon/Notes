@@ -190,7 +190,7 @@ task和microtask都是推入栈中执行的。
 
 javaScript是单线程，也就是说只有一个主线程，主线程有一个栈，每一个函数执行的时候，都会生成新的`execution context（执行上下文）`，执行上下文会包含一些当前函数的参数、局部变量之类的信息，它会被推入栈中，[ running execution context（正在执行的上下文）](https://tc39.github.io/ecma262/#running-execution-context)始终处于栈的顶部。当函数执行完后，它的执行上下文会从栈弹出。
 
-![execution context stack](/Users/liuchang/Documents/markdown/面试题/JS/assets/execution context stack.png)
+![execution context stack](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/execution%20context%20stack.png)
 
 
 
@@ -201,7 +201,7 @@ javaScript是单线程，也就是说只有一个主线程，主线程有一个�
 
 过程图：
 
-![event loop](/Users/liuchang/Documents/markdown/面试题/JS/assets/event loop.png)
+![event loop](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/event%20loop.png)
 
 举个简单的例子，假设一个script标签的代码如下：
 
@@ -282,15 +282,15 @@ setTimeout(function setTimeout2 (){
 
 event loop的大致循环过程，可以用下边的图表示：
 
-![loop1](/Users/liuchang/Documents/markdown/面试题/JS/assets/loop1.png)
+![loop1](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/loop1.png)
 
 假设现在执行到currently running task，我们对批量的dom进行异步修改，我们将此任务插进task：
 
-![loop2](/Users/liuchang/Documents/markdown/面试题/JS/assets/loop2.png)
+![loop2](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/loop2.png)
 
 此任务插进microtasks：
 
-![loop3](/Users/liuchang/Documents/markdown/面试题/JS/assets/loop3.png)
+![loop3](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/loop3.png)
 
 可以看到如果task队列如果有大量的任务等待执行时，将dom的变动作为microtasks而不是task能更快的将变化呈现给用户。
 
