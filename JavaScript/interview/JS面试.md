@@ -200,7 +200,7 @@ V8 中主垃圾回收器就采用标记清除法进行垃圾回收。主要流�
 
 > 所以我们需要尽可能的使用const和let，因为const和let使JS有了块级作用域，当块级作用域比函数作用域更早结束时，垃圾回收程序更早介入
 
-![mark and sweep](/Users/liuchang/Documents/markdown/面试题/JS/JS面试.assets/mark and sweep.webp)
+![mark and sweep](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/mark%20and%20sweep.webp)
 
 #### WeakMap 与 Map
 
