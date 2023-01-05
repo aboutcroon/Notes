@@ -117,7 +117,7 @@ vite 更应该是与 vue cli，create-react-app 这样的集成了 webpack 的�
 
 传统的构建工具如下图
 
-![bundle based](/Users/croon/Documents/markdown/学习/Vite/assets/bundle based.png)
+![bundle based](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vite/assets/bundle%20based.png)
 
 从入口开始，将文件编译，最终打包成一个 bundle，每增加多一个文件，速度就会慢一点。
 
@@ -125,7 +125,7 @@ vite 更应该是与 vue cli，create-react-app 这样的集成了 webpack 的�
 
 对于 vite，如下图
 
-![native ESM based](/Users/croon/Documents/markdown/学习/Vite/assets/native ESM based.png)
+![native ESM based](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vite/assets/native%20ESM%20based.png)
 
 vite 速度快的原因有两大点：
 
@@ -151,7 +151,7 @@ npm init vite@latest
 
 public 目录下存放一些静态文件，图片等不需要编译的内容，vite 提供了路径映射，可以让我们更方便的去 import
 
-![vite vue3](/Users/croon/Documents/markdown/学习/Vite/assets/vite vue3.png)
+![vite vue3](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vite/assets/vite%20vue3.png)
 
 webpack 和 rollup 的编译入口是一个 js 文件，vite 的编译入口是一个 html 文件，因为 vite 一开始不编译 main.js 那些文件，它是让浏览器去加载 index.html 文件，[index.html 文件位于最外层](https://cn.vitejs.dev/guide/#index-html-and-project-root)，通过 script 标签，就会去加载 src 下面的 main.js 文件，然后 vite 才会对 main.js 去进行编译。这就是 vite 以一个 html 文件作为入口的最大因素所在
 
@@ -342,7 +342,7 @@ if (import.meta.hot) { // vite build 的代码中就没有 hot
 
 通过 websocket 来实现热更新
 
-![HMR ws](/Users/croon/Documents/markdown/学习/Vite/assets/HMR ws.png)
+![HMR ws](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vite/assets/HMR%20ws.png)
 
 acceptedPath 的文件路径就是我们实际修改的文件对应的路径
 
@@ -366,7 +366,7 @@ acceptedPath 的文件路径就是我们实际修改的文件对应的路径
 
 直接被编译成了 `"文件名: import(..)"` 的形式
 
-![glob import](/Users/croon/Documents/markdown/学习/Vite/assets/glob import.png)
+![glob import](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vite/assets/glob%20import.png)
 
 使用 globEager 则可以不用异步引入，可直接引入所有模块
 
@@ -418,7 +418,7 @@ const modules = {
 
 node_modules 中有个 [.vite](https://cn.vitejs.dev/config/#cachedir) 的文件夹，这里就是生成缓存的地方，我们在里面可以看到很多依赖文件
 
-![vite cache](/Users/croon/Documents/markdown/学习/Vite/assets/vite cache.png)
+![vite cache](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vite/assets/vite%20cache.png)
 
 之后可以直接读这里的缓存文件，可以不再走任何跟编译有关的东西
 
