@@ -740,5 +740,5 @@ function insert(child, parent, anchor) {
 
 ## 流程图
 
-![组件渲染流程](/Users/liuchang/Documents/markdown/学习/Vue3/assets/组件渲染流程.png)
+![组件渲染流程](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/article/assets/%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B.png)
 

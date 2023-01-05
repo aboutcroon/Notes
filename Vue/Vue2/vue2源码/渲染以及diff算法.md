@@ -442,43 +442,43 @@ let newEndIdx = newCh.length - 1
 
 整个流程如图：
 
-![patch流程](/Users/croon/Documents/markdown/学习/Vue/源码/assets/patch流程.png)
+![patch流程](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/patch%20process.png)
 
 
 
 第一步：
 
-![diff1](/Users/croon/Documents/markdown/学习/Vue/源码/assets/diff1.png)
+![diff1](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/diff1.png)
 
 
 
 第二步：
 
-![diff2](/Users/croon/Documents/markdown/学习/Vue/源码/assets/diff2.png)
+![diff2](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/diff2.png)
 
 
 
 第三步：
 
-![diff3](/Users/croon/Documents/markdown/学习/Vue/源码/assets/diff3.png)
+![diff3](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/diff3.png)
 
 
 
 第四步：
 
-![diff4](/Users/croon/Documents/markdown/学习/Vue/源码/assets/diff4.png)
+![diff4](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/diff4.png)
 
 
 
 第五步：
 
-![diff5](/Users/croon/Documents/markdown/学习/Vue/源码/assets/diff5.png)
+![diff5](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/diff5.png)
 
 
 
 第六步：
 
-![diff6](/Users/croon/Documents/markdown/学习/Vue/源码/assets/diff6.png)
+![diff6](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue2/vue2%E6%BA%90%E7%A0%81/assets/diff6.png)
 
 
 

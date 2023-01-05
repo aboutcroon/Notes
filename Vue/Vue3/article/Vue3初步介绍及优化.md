@@ -34,11 +34,11 @@
 
 Vue.js 2.x 的源码托管在 src 目录，然后依据功能拆分出了 compiler（模板编译的相关代码）、core（与平台无关的通用运行时代码）、platforms（平台专有代码）、server（服务端渲染的相关代码）、sfc（.vue 单文件解析相关代码）、shared（共享工具代码） 等目录。
 
-![vue2结构](/Users/liuchang/Documents/markdown/学习/Vue3/assets/vue2结构.png)
+![vue2结构](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/article/assets/vue2%E7%BB%93%E6%9E%84.png)
 
 而到了 Vue.js 3.0 ，整个源码是通过 monorepo 的方式维护的，根据功能将不同的模块拆分到 packages 目录下面不同的子目录中。
 
-![monorepo](/Users/liuchang/Documents/markdown/学习/Vue3/assets/monorepo.png)
+![monorepo](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/article/assets/monorepo.png)
 
 
 
@@ -110,7 +110,7 @@ observed = new Proxy(data, {
 
 
 
-![vue2编译](/Users/liuchang/Documents/markdown/学习/Vue3/assets/vue2编译.png)
+![vue2编译](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/article/assets/vue2%E7%BC%96%E8%AF%91.png)
 
 上面说过的响应式过程就发生在图中的 init 阶段，另外 template compile to render function 的流程是可以借助 vue-loader 在 webpack 编译阶段离线完成，并非一定要在运行时完成。
 
@@ -134,7 +134,7 @@ observed = new Proxy(data, {
 
 整个 diff 过程如图所示：
 
-![vue2diff](/Users/liuchang/Documents/markdown/学习/Vue3/assets/vue2diff.png)
+![vue2diff](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/article/assets/vue2diff.png)
 
 在 Vue3 中，它通过编译阶段对静态模板的分析，编译生成了 Block tree。Block tree 是一个将模版基于动态节点指令切割的嵌套区块，每个区块内部的节点结构是固定的，而且每个区块只需要以一个 Array 来追踪自身包含的动态节点。借助 Block tree，Vue3 将 vnode **更新性能**由与模版整体大小相关提升为**与动态内容的数量相关**，这是一个非常大的性能突破。
 

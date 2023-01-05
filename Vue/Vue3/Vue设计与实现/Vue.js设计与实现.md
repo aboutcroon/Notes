@@ -372,11 +372,11 @@ function effect () {
 
 当读取字段obj.text时，我们可以把副作用函数effect存储到一个“桶”里面
 
-![4-1](/Users/liuchang/Documents/markdown/学习/Vue3/Vue.js设计与实现.assets/4-1.png)
+![4-1](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/Vue%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/assets/4-1.png)
 
 接着，当设置obj.text时，再把副作用函数从“桶”里取出并执行即可
 
-![4-2](/Users/liuchang/Documents/markdown/学习/Vue3/Vue.js设计与实现.assets/4-2.png)
+![4-2](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/Vue%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/assets/4-2.png)
 
 
 
@@ -606,7 +606,7 @@ function track(target, key) {
 
 关系如图所示：
 
-![4.7](/Users/liuchang/Documents/markdown/学习/Vue3/Vue.js设计与实现.assets/4.7.png)
+![4.7](https://raw.githubusercontent.com/aboutcroon/Notes/main/Vue/Vue3/Vue%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/assets/4.7.png)
 
 
 
