@@ -4,7 +4,7 @@
 
 在请求中，HTTP报文由`方法`、`URI`、`HTTP版本`、`HTTP首部字段`等部分构成
 
-![请求报文](/Users/croon/Documents/markdown/学习/HTTP/assets/请求报文.png)
+![请求报文](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/request%20message.png)
 
 
 
@@ -12,7 +12,9 @@
 
 在响应中，HTTP报文由`HTTP版本`、`状态码（数字和原因短语）`、`HTTP首部字段`3部分构成。
 
-![请求报文](/Users/croon/Documents/markdown/学习/HTTP/assets/响应报文.png)
+![响应报文](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/response%20message.png)
+
+
 
 ### 4种HTTP首部字段类型
 
@@ -24,25 +26,25 @@ HTTP首部字段根据实际用途被分为以下4种类型。
 
 请求报文和响应报文两方都会使用的首部。
 
-![请求报文](/Users/croon/Documents/markdown/学习/HTTP/assets/通用首部字段.png)
+![通用首部字段](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/universal%20header.png)
 
 #### 请求首部字段（Request Header Fields）：
 
 从客户端向服务器端发送请求报文时使用的首部。补充了请求的附加内容、客户端信息、响应内容相关优先级等信息。
 
-![请求报文](/Users/croon/Documents/markdown/学习/HTTP/assets/请求首部字段.png)
+![请求首部字段](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/request%20header.png)
 
 #### 响应首部字段（Response Header Fields）：
 
 从服务器端向客户端返回响应报文时使用的首部。补充了响应的附加内容，也会要求客户端附加额外的内容信息。
 
-![请求报文](/Users/croon/Documents/markdown/学习/HTTP/assets/响应首部字段.png)
+![响应首部字段](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/response%20header.png)
 
 #### 实体首部字段（Entity Header Fields）：
 
 针对请求报文和响应报文的实体部分使用的首部。补充了资源内容更新时间等与实体有关的信息。
 
-![请求报文](/Users/croon/Documents/markdown/学习/HTTP/assets/实体首部字段.png)
+![实体首部字段](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/response%20entity%20header.png)
 
 ### 非HTTP/1.1首部字段
 
@@ -89,7 +91,7 @@ HTTPS 并非是应用层的一种新协议。只是HTTP通信接口部分用SSL�
 
 通常，HTTP 直接和 TCP 通信。当使用 SSL 时，则演变成先和 SSL 通信，再由 SSL 和 TCP 通信了。简言之，所谓 HTTPS，其实就是身披 SSL 协议这层外壳的 HTTP。
 
-![HTTPS](/Users/croon/Documents/markdown/学习/HTTP/assets/HTTPS.png)
+![HTTPS](https://raw.githubusercontent.com/aboutcroon/Notes/main/HTTP/assets/https.png)
 
 在采用 SSL 后，HTTP 就拥有了 HTTPS 的加密、证书和完整性保护这些功能。
 
