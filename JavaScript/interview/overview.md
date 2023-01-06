@@ -1,3 +1,5 @@
+![overview](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/js%20overview.png)
+
 ## 8. 面向对象
 
 
