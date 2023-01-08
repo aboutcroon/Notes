@@ -201,26 +201,127 @@ if (xx) {
 
 
 
+### 引入文件时必须添加 .vue 后缀
+
+> 参考：https://github.com/vitejs/vite/issues/178
+
+```js
+// before
+import EChart from '@/components/EChart'
+
+// now
+import EChart from '@/components/EChart/index.vue'
+```
 
 
-### 报错
 
-### [vite] Internal server error: Cannot read properties of undefined (reading 'length')
+### defineProps 和 defineEmits 不再需要引入
+
+将 `import defineProps` 和 `import defineEmits` 的部分去除，eslint 的报错用 *// eslint-disable-next-line no-undef* 注释
+
+
+
+### src="require('xxx')" 将资源引入为 URL
+
+```html
+<!-- before -->
+<img :src="require(`${store.controller ? './img.png' : './img1.png'}`)" />
+```
+
+```vue
+<!-- now -->
+<template>
+	<img :src="dynamicUrl" />
+</template>
+<script>
+  const dynamicUrl = new URL(`${store.controller ? './img.png' : './img1.png'}`, import.meta.url).href
+</script>
+```
+
+之前有需要动态计算出静态资源 url 的地方，会用到 require，现在使用 vite 的话需要换成 import.meta.url 结合 new URL 来使用
+
+> 参考：https://cn.vitejs.dev/guide/assets.html
+
+
+
+### 项目启动的环境变量写入
+
+为了防止意外地将一些环境变量泄漏到客户端，只有以 `VITE_` 为前缀的变量才会暴露给经过 vite 处理的代码。也就是之前的 `NODE_ENV` 等变量无法被读取到了，现在要改成：
+
+```json
+"scripts": {
+    "dev": "vite",
+    "mock": "VITE_ENV=mock vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "vite lint",
+    "lint:style": "stylelint **/*.{vue,css,less} --custom-syntax postcss-html --fix"
+  }
+```
+
+但像我们的 commons 文件，例如 tailwind 的配置文件，依然需要使用 `process.env.NODE_ENV`。因为 `import.meta` 是一个内置在 ES 模块内部的对象，而我们的 tailwind 文件是 CommonJS模块，自然没有`import.meta`对象。
+
+会报错
+
+```
+[vite] Internal server error: Cannot use 'import.meta' outside a module while compiling ejs
+```
+
+
+
+### ❗️request 请求文件部分需要重构
+
+不使用 import.meta.glob 引入，那样会产生异步函数，选择重构 api 的请求方式，所有页面的 api 均需要修改，是工作量最大的一部分。
+
+
+
+### 项目报错
+
+#### [vite] Internal server error: Cannot read properties of undefined (reading 'length')
 
 属于 tailwind.config.js 中出的问题，将文件名改为 `tailwind.config.cjs`
 
 
 
-### Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+#### Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
 
 原因是在 js 文件中写了 jsx 的语法，类似 `() => <div></div>`
 
 解决方案是：
 
-1. 把 `.js` 文件改为 `.jsx` 文件
+1. 把 `.js` 文件改为 `.jsx` 文件，将 vue 文件改成 `<script lang="jsx">`
 2. 使用 loader: { '.js': 'jsx' } 来配置
 
 第二种解法，参考 esbuild 的配置 https://esbuild.github.io/content-types/#ts-vs-tsx，https://github.com/vitejs/vite/issues/769
 
 但是在 vite 中找不到哪里可以传递配置到 esbuild，只能先使用第一种方法了。
+
+
+
+### 构建报错
+
+#### js emit is not supported
+
+npm run  build 时出现报错
+
+```
+js emit is not supported
+
+/Users/liuchang/Documents/virtaitech/gui/client/node_modules/vue-tsc/out/proxy.js:110
+    throw msg;
+    ^
+js emit is not supported
+(Use `node --trace-uncaught ...` to show where the exception was thrown)
+```
+
+需要修改 tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noEmit": true
+  }
+}
+```
 
