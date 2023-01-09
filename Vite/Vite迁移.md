@@ -275,6 +275,42 @@ import EChart from '@/components/EChart/index.vue'
 
 
 
+### 添加 vite 插件
+
+类似于 clean-webpack-plugin 等插件，需要替换成 rollup 相应的插件  rollup-plugin-cleaner
+
+其他的功能插件也需要替换
+
+
+
+### 网页icon不显示的问题
+
+index.html 文件中
+
+```html
+<!-- before -->
+<link rel="icon" href="dynamic/favicon.ico">
+<!-- now -->
+<link rel="icon" href="./public/dynamic/favicon.ico">
+```
+
+这样 icon 打包出来的 url 就有 base64后缀，就不会使用缓存，icon 会一直显示。
+
+> vite 相关 issue：https://github.com/vitejs/vite/issues/2173
+>
+> 
+>
+> webpack 中该问题的解决方案：https://blog.csdn.net/l2345432l/article/details/119415893
+>
+> ```js
+> new HtmlWebpackPlugin({
+>   title: 'xxx'
+>   favicon:'dynamic/favicon.ico' //添加 icon 路径
+> })
+> ```
+
+
+
 ### 项目报错
 
 #### [vite] Internal server error: Cannot read properties of undefined (reading 'length')
