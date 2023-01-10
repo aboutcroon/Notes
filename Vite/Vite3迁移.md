@@ -361,3 +361,9 @@ js emit is not supported
 }
 ```
 
+#### throw new CACError(`Unknown option \`${name.length > 1 ? `--${name}` : `-${name}`}\``);
+
+> 参考：https://github.com/vitejs/vite/issues/1164
+
+如上述 issue，出现该报错的原因是 vite build 的时候添加的未知的参数，需要将未知参数去掉即可。
+
