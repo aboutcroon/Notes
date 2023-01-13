@@ -57,3 +57,14 @@ depends on: 通过 depends_on 来标记依赖关系, 当 mongo 服务启动完�
 
 
 参考https://blog.csdn.net/gold0523/article/details/102467102
+
+
+
+# 报错
+
+## 'docker build' error: "failed to solve with frontend dockerfile.v0"
+
+> 参考：https://github.com/docker/buildx/issues/415
+
+docker build 的时候报错，看 issue 发现把 Dockerfile 改成 dockerfile 即可
+

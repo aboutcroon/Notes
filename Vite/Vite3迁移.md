@@ -334,6 +334,12 @@ index.html 文件中
 
 
 
+#### 热更新报错 [hmr] Failed to reload /src/views/device/index.vue. This could be due to syntax errors or importing non-existent modules. (see errors above)
+
+原因是在 router 文件里直接引入 .vue 文件当 component 使用，而没有用懒加载的模式引入，导致热更新失效，改成懒加载引入后就好了。
+
+
+
 ### 构建报错
 
 #### js emit is not supported

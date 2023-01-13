@@ -1,5 +1,47 @@
 ![overview](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/js%20overview.png)
 
+## 6.this/call/apply/bind
+
+### this 的概念
+
+this 是执行上下文的一个属性，它指向最后一次调用这个方法的对象
+
+### 判断 this 指向优先级
+
+1. **箭头函数**
+   创建箭头函数时，就已经确定了它的 this 指向，箭头函数内的 this 指向外层的 this。
+
+2. **new**
+   一个函数用 new 调用时，函数执行前会创建一个新对象，this 指向这个新对象。
+   （箭头函数不能当做构造函数，所以不能与 new 一起执行）
+
+3. **bind、apply 和 call**
+   这三个方法可以显式的指定调用函数的 this 指向。（如果使用 new 运算符构造绑定函数，则忽略传入的 this，例如：boundFunc = func.bind(1); new boundFunc()
+
+   > 为什么需要改变 this 指向？
+   > 因为我们在使用 setTimeout 的时候，回调函数的 this 会指向 window 对象（在浏览器中），因为其在定时器中是作为回调函数来执行的，因此回到主栈执行时是在全局执行上下文的环境中执行的。这时我们就需要手动修改 this 的指向。
+
+4. **方法调用**（obj.xx）
+   一个函数作为一个对象的方法来调用时，this 指向这个对象。
+
+5. **函数调用** fn()
+   直接作为函数来调用时，this 指向全局对象。
+   在浏览器环境中全局对象是 Window，在 Node.js 环境中是 Global。
+
+6. **不在函数里**
+   在 `<script />` 标签里，this 指向 Window。
+   在 Node.js 的模块文件里，this 指向 Module 的默认导出对象，也就是 module.exports。
+
+7. **在非严格模式下，如果得出 this 指向是 undefined 或 null，那么 this 都指向全局对象**
+
+### call 和 apply 的区别
+
+第一个参数都是指定函数体内 this 对象的指向，第二个参数都是作为参数传递给被调用的函数。
+
+apply 的第二个参数是数组或者类数组，call 从第二个参数开始往后，每个参数被依次传入函数。
+
+
+
 ## 7. 异步编程
 
 ### 异步编程的实现方式
@@ -191,6 +233,15 @@ console.log('cug')
 await 暂停当前 async 的执行，所以 cug 最先输出，hello world 和 cuger 是3秒钟后同时出现的。
 
 这就是 await 必须用在 async 函数中的原因。**因为 async 是异步函数，它的调用不会造成主线程同步代码的阻塞**，它内部所有的阻塞都被封装在一个 Promise 对象中异步执行。
+
+### async/await 相对于 Promise 的优势
+
+- 阅读友好；代码同步执行，比起多个链式调用阅读起来更友好
+- 传递中间值友好；多个链式调用时，Promise 传递中间值比较麻烦，而 async/await 是同步的写法，非常优雅
+- 错误处理友好，async/await 可以使用成熟的 try catch，promise 的错误捕获会导致多个链式调用，很冗余
+- 调试友好；调试器只能跟踪同步代码的每一步，如果在 .then 处使用调试器的步进（step-over）功能，调试器并不会进入后续的 .then 代码块
+
+
 
 ## 8. 面向对象
 
