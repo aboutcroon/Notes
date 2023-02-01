@@ -191,6 +191,41 @@ legend: {
 
 参考网址：https://blog.csdn.net/shuoSmallWhite/article/details/80106791
 
+## position
+
+要想固定 tooltip 出现在鼠标右下角位置
+
+```ts
+tooltip: {
+  position: (
+    point,
+    params,
+    dom,
+    rect,
+    size
+  ) => {
+    return [point[0], point[1]];
+  }
+}
+```
+
+## axisPointer
+
+要想控制柱状图鼠标 hover 上去的阴影宽度，则将其 type 设置成 line，再自定义 line 的宽度
+
+```js
+tooltip: {
+  axisPointer: {
+    type: "line",
+    lineStyle: {
+      color: "rgba(91,143,249,0.08)",
+      type: "solid",
+      width: 30,
+    }
+  }
+}
+```
+
 
 
 # 6. 配置项
@@ -326,4 +361,22 @@ https://blog.csdn.net/anjiongyi/article/details/124255820?spm=1001.2101.3001.666
 
 
 https://blog.csdn.net/weixin_45304198/article/details/122115316
+
+
+
+## 横向堆叠条状图的顶部 label 宽度
+
+```js
+grid: {
+  left: 0,
+  right: -30, // 通过和 boundaryGap 结合，让其与右侧对齐
+  top: -10,
+  bottom: 30,
+},
+xAxis: {
+  type: "value",
+  show: false,
+  boundaryGap: [0, "12%"],
+}
+```
 
