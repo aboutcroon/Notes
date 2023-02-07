@@ -17,6 +17,38 @@ const tokenInfo = JSON.parse(localStorage.getItem('tokenInfo') || '{}')
 
 因为 `JSON.parse` 中的内容永远是要一个 string，如果为 null 的话，我们就要兼容一下，并且我们不能写成`''` 空字符串，必须要写成 `'{}'`，不然还会报 `Unexpected end of JSON input` 的错误
 
+### 给 props 声明类型
+
+使用 PropType，示例如下
+
+```vue
+<BookList
+  v-for="book in Books"
+  :key="book.bookId"
+  :book-title="book.bookTitle"
+  :book-author="book.authorName"        
+/>
+
+<script lang="ts">
+import { PropType } from 'vue'
+interface Book {
+  bookId: string,
+  bookTitle: string,
+  authorName: string
+}
+props:{
+  Books:{
+    type: Array as PropType<Book[]>,
+    default:()=>{return []}     
+  }
+}
+</script>
+```
+
+
+
+
+
 
 
 ## TSX相关
@@ -178,4 +210,47 @@ setup () {
 ```
 
 使用 template ref 时，要记得将其 return 出去，然后在 mounted 钩子中才能取到值。
+
+
+
+### setup 中如何获取 this
+
+```js
+import { onMounted, getCurrentInstance } from 'vue'
+export default {
+	data () {
+		return {
+			x: 1
+		}
+	},
+	setup () {
+		// 这里打印出来undefined，setup里面没有this
+		console.log(this)
+		onMounted (() => {
+			// 这里就能打印出来1
+			console.log(instance.data.x)
+		})
+    // getCurrentInstance 不要在 onMounted 中执行，那样的话 instance 也是为空
+		const instance = getCurrentInstance()
+		// 这里打印出来是 undefined，因为 setup 声明周期是 beforeCreated 和 created 合并的，这时候 data 还没有初始化，所以我们要在 onMounted 里打印。
+		console.log(instance.data.x)
+	}
+}
+```
+
+### 如何删除 route.query 中的参数
+
+有的时候，query 中的参数只需使用一次，我们为了防止刷新之后参数再次存在，所以我们需要立即将其删除
+
+示例中删除了 query 中的 `config` 参数
+
+```js
+if (route.query.config) {
+  initModal.value = true;
+  // 使用完 config 参数后立即删除
+  const newQuery = JSON.parse(JSON.stringify(route.query));
+  delete newQuery.config;
+  router.replace({ query: newQuery });
+}
+```
 

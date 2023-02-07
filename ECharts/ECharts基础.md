@@ -185,6 +185,14 @@ legend: {
 
 
 
+## 设置高度
+
+当`orient="horizontal"`的时候，只有 width 会起作用，height为auto
+
+当`orient="vertical"`的时候只有 height 会起作用，width为auto。
+
+> 参考：https://github.com/apache/echarts/issues/4200
+
 # 5. tooltip
 
 ## 5.1 formatter
@@ -364,7 +372,11 @@ https://blog.csdn.net/weixin_45304198/article/details/122115316
 
 
 
-## 横向堆叠条状图的顶部 label 宽度
+## 修改横向堆叠条状图的右侧 label 宽度
+
+![charts1](https://raw.githubusercontent.com/aboutcroon/Notes/main/ECharts/assets/charts1.png)
+
+如图所示，需要 hover 时让阴影柱状长度铺满，但是这时可能会造成最右边的 label 76% 这几个字超出而被截断，这时可以通过 boundaryGap 和 grid 结合起来控制最右侧位置。
 
 ```js
 grid: {
