@@ -415,6 +415,116 @@ CSSSprites（雪碧图），将一个页面涉及到的所有图片都包含到�
 
 
 
+### display: inline-block 什么时候会显示间隙？
+
+- 有空格时会有间隙，可以删除空格解决；
+- `margin`正值时，可以让`margin`使用负值解决；
+- 使用`font-size`时，可通过设置`font-size:0`、`letter-spacing`、`word-spacing`解决；
+
+
+
+### 单行、多行文本溢出隐藏
+
+- 单行文本溢出
+
+```css
+overflow: hidden;            // 溢出隐藏
+text-overflow: ellipsis;      // 溢出用省略号显示
+white-space: nowrap;         // 规定段落中的文本不进行换行
+```
+
+- 多行文本溢出
+
+```css
+overflow: hidden;            // 溢出隐藏
+text-overflow: ellipsis;     // 溢出用省略号显示
+display: -webkit-box;         // 作为弹性伸缩盒子模型显示。
+-webkit-box-orient: vertical; // 设置伸缩盒子的子元素排列方式：从上到下垂直排列
+-webkit-line-clamp: 3;        // 显示的行数
+```
+
+注意：由于上面的三个属性都是 CSS3 的属性，没有浏览器可以兼容，所以要在前面加一个`-webkit-`来兼容一部分浏览器。
+
+
+
+###  Sass、Less 是什么？为什么要使用他们？
+
+他们都是 CSS 预处理器，是 CSS 上的一种抽象层。他们是一种特殊的语法/语言编译成的 CSS。 
+
+**例如 Less 是一种动态样式语言，将 CSS 赋予了动态语言的特性**，如变量，继承，运算， 函数，Less 既可以在客户端上运行 (支持 IE 6+, Webkit, Firefox)，也可以在服务端运行 (借助 Node.js)。
+
+
+
+**为什么要使用它们？**
+
+- 结构清晰，便于扩展。 可以方便地屏蔽浏览器私有语法差异。封装对浏览器语法差异的重复处理， 减少无意义的机械劳动。
+- 可以轻松实现多重继承。 完全兼容 CSS 代码，可以方便地应用到老项目中。Less 只是在 CSS 语法上做了扩展，所以老的 CSS 代码也可以与 LESS 代码一同编译。
+
+
+
+### 对媒体查询的理解
+
+媒体查询的组成
+
+- ⼀个可选的媒体类型
+- 零个或多个使⽤媒体功能限制了样式表范围的表达式，例如宽度、⾼度和颜⾊。
+
+媒体查询，是在 CSS3 中的新特性，允许内容的呈现针对⼀个特定范围的输出设备⽽进⾏裁剪，⽽不必改变内容本身，适合 web ⽹⻚应对不同型号的设备⽽做出对应的响应适配。
+
+媒体查询包含⼀个可选的媒体类型，和满⾜ CSS3 规范的条件下的零个或多个表达式，这些表达式描述了媒体特征，最终会被解析为 true 或 false。如果媒体查询中指定的媒体类型匹配展示⽂档所使⽤的设备类型，并且所有的表达式的值都是 true，那么该媒体查询的结果为true。那么媒体查询内的样式将会⽣效。
+
+```javascript
+<!-- link 元素中的 CSS 媒体查询 --> 
+<link rel="stylesheet" media="(max-width: 800px)" href="example.css" />
+
+<!-- 样式表中的 CSS 媒体查询 --> 
+<style> 
+@media (max-width: 600px) { 
+  .facet_sidebar { 
+    display: none; 
+  } 
+}
+</style>
+```
+
+简单来说，使用 @media 查询，可以针对不同的媒体类型定义不同的样式。@media 可以针对不同的屏幕尺寸设置不同的样式，特别是**需要设置设计响应式的页面**，@media 是非常有用的。当重置浏览器大小的过程中，页面也会根据浏览器的宽度和高度重新渲染页面。
+
+
+
+### 对 CSS 工程化的理解
+
+CSS 工程化是为了解决以下问题：
+
+1. **宏观设计**：CSS 代码如何组织、如何拆分、模块结构怎样设计？
+2. **编码优化**：怎样写出更好的 CSS？
+3. **构建**：如何处理我的 CSS，才能让它的打包结果最优？
+4. **可维护性**：代码写完了，如何最小化它后续的变更成本？如何确保任何一个同事都能轻松接手？
+
+以下三个方向都是时下比较流行的、普适性非常好的 CSS 工程化实践：
+
+- 预处理器：Less、 Sass 等；
+- 重要的工程化插件： Postcss；
+- Webpack loader 等
+
+
+
+### 如何判断元素是否到达可视区域
+
+以元素为例：
+
+el.scrollTop + el.clientHeight > el.scrollHeight - 1
+
+以图片显示为例：
+
+- `window.innerHeight` 是浏览器可视区的高度；
+- `document.body.scrollTop || document.documentElement.scrollTop` 是浏览器滚动的过的距离；
+- `imgs.offsetTop` 是元素顶部距离文档顶部的高度（包括滚动条的距离）；
+- 内容达到显示区域的：`img.offsetTop < window.innerHeight + document.body.scrollTop;`
+
+
+
+
+
 ## 1. 页面布局
 
 ### 三栏布局

@@ -47,10 +47,6 @@ props:{
 
 
 
-
-
-
-
 ## TSX相关
 
 引入组件时，组件的文件命名一定要是大驼峰，不能是小驼峰，否则会出现 `The requested module './xxx.js' does not provide an export named 'xxx'` 的报错
@@ -254,3 +250,10 @@ if (route.query.config) {
 }
 ```
 
+## 报错
+
+### Failed to execute 'insertBefore' on 'Node': The node before which the new node is to be inserted is not a child of this node.
+
+menu 下面有多个根节点，导致里面的 v-for 更新时出错，将外层不必要的 div 删掉后解决
+
+> 参考：https://github.com/nuxt/nuxt/issues/12735
