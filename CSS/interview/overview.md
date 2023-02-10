@@ -10,7 +10,7 @@
 | 属性选择器     | a[ref=“eee”]  | 10             |
 | 伪类选择器     | li:last-child | 10             |
 | 标签选择器     | div           | 1              |
-| 伪元素选择器   | li:after      | 1              |
+| 伪元素选择器   | li::after     | 1              |
 | 相邻兄弟选择器 | h1+p          | 0              |
 | 子选择器       | ul>li         | 0              |
 | 后代选择器     | li a          | 0              |
@@ -70,7 +70,7 @@
 
 4. **列表布局属性**
 
-   list-style：列表风格，包括list-style-type、list-style-image等
+   list-style：列表风格，包括 list-style-type、list-style-image 等
 
 5. **光标属性**
 
@@ -521,7 +521,356 @@ el.scrollTop + el.clientHeight > el.scrollHeight - 1
 - `imgs.offsetTop` 是元素顶部距离文档顶部的高度（包括滚动条的距离）；
 - 内容达到显示区域的：`img.offsetTop < window.innerHeight + document.body.scrollTop;`
 
+![scroll photo](https://raw.githubusercontent.com/aboutcroon/Notes/main/CSS/interview/assets/scroll%20photo.png)
 
+
+
+### z-index属性在什么情况下会失效
+
+通常 z-index 的使用是在有两个重叠的标签，在一定的情况下控制其中一个在另一个的上方或者下方出现。
+
+z-index 值越大就越是在上层。z-index 只能在 position 属性值为 relative，absolute 或是fixed 的元素上有效
+
+> position 的属性：默认为static、fixed、relative、absolute、sticky
+
+z-index 属性在下列情况下会失效：
+
+- 元素没有设置 position 属性为非 static 属性。
+
+  解决：设置该元素的 position 属性为relative，absolute 或是 fixed 中的一种；
+
+- 父元素 position 为 relative 时，子元素的 z-index 失效。
+
+  解决：父元素 position 改为absolute 或 static；
+
+- 元素在设置 z-index 的同时还设置了 float 浮动。
+
+  解决：float 去除，改为 display：inline-block
+
+## 2.页面布局
+
+### 常见的CSS布局单位
+
+常用的布局单位包括像素（`px`），百分比（`%`），`em`，`rem`，`vw/vh`。
+
+**（1）像素**（`px`）
+
+是页面布局的基础，一个像素表示终端（电脑、手机、平板等）屏幕所能显示的最小的区域，像素分为两种类型：CSS像素和物理像素
+
+- **CSS像素**：为web开发者提供，在CSS中使用的一个抽象单位；
+- **物理像素**：只与设备的硬件密度有关，任何设备的物理像素都是固定的。
+
+**（2）百分比**（`%`）
+
+当浏览器的宽度或者高度发生变化时，通过百分比单位可以使得浏览器中的组件的宽和高随着浏览器的变化而变化，从而实现响应式的效果。一般认为子元素的百分比相对于直接父元素。
+
+**（3）em和rem**
+
+相对于px更具灵活性，它们都是相对长度单位，它们之间的区别：**em相对于父元素，rem相对于根元素。**
+
+- **em：** 文本相对长度单位。其值并不固定，一般会继承父级元素的字体大小。任意浏览器的默认字体尺寸都是 16px，所有未经调整的浏览器都符合： 1em=16px。但如果父级设置了其他字体高度，那此时的 1em 就等于父级设置好的字体高度。
+- **rem：** rem 是 CSS3 新增的一个单位，同样，它也是一个相对单位，不过相对的是 HTML 根元素。通过它既可以做到只修改根元素就成比例地调整所有字体大小，实现当屏幕分辨率变化时让元素也随之变化；又可以避免字体大小逐层复合的连锁反应。
+
+**（4）vw/vh**
+
+与视图窗口有关的单位
+
+- vw：相对于视窗的宽度，视窗宽度是 100vw；
+- vh：相对于视窗的高度，视窗高度是 100vh；
+- vmin：vw 和 vh 中的较小值；
+- vmax：vw 和 vh 中的较大值；
+
+**vw/vh** 和百分比很类似，两者的区别：
+
+- 百分比（`%`）：大部分相对于祖先元素，也有相对于自身的情况比如（border-radius、translate等)
+- vw/vm：相对于视窗的尺寸
+
+
+
+### px、em、rem 的使用场景
+
+- 对于只需要适配少部分移动设备，且分辨率对页面影响不大的，使用px即可 。
+- 对于需要适配各种移动设备，使用 rem，例如需要适配 iPhone 和 iPad 等分辨率差别比较挺大的设备。
+
+
+
+### 两栏布局
+
+一般两栏布局指的是**左边一栏宽度固定，右边一栏宽度自适应**
+
+两栏布局的具体实现：
+
+- 利用flex布局，将左边元素设置为固定宽度 200px，将右边的元素设置为 flex:1。
+
+```css
+.outer {
+  display: flex;
+  height: 100px;
+}
+.left {
+  width: 200px;
+  background: tomato;
+}
+.right {
+  flex: 1;
+  background: gold;
+}
+```
+
+
+
+### 三栏布局
+
+三栏布局一般指的是页面中一共有三栏，**左右两栏宽度固定，中间自适应的布局**
+
+三栏布局的具体实现：
+
+- 圣杯布局
+
+  利用浮动和负边距来实现。**基本布局之后使用向左浮动，center 栏留出两边位置，然后使用相对定位将左右两栏通过`margin-left`定位到相应位置。**
+
+  center 放在最前面是为了让中间一栏最先加载、渲染出来
+
+  ```html
+  <div class="outer">
+    <div class="center">中间</div>
+    <div class="left">左</div>
+    <div class="right">右</div>
+  </div>
+  ```
+
+  ```css
+  /* 基本样式 */
+  .outer {
+    height: 100px;
+  }
+  
+  .center, .left, .right {
+    float: left;
+    height: 100px;
+  }
+  
+  .left {
+    width: 100px;
+    height: 100px;
+    background: tomato;
+    margin-left: -100%; /* 让 left 与 center 在同一行显示 */
+  }
+  
+  .right {
+    width: 200px;
+    height: 100px;
+    background: gold;
+    margin-left: -200px; /* 让 right 与 center 在同一行显示 */
+  }
+  
+  .center {
+    width: 100%;
+    height: 100px;
+    background: lightgreen;
+  }
+  
+  /* 圣杯样式 */
+  .outer {
+    padding-left: 100px;
+    padding-right: 200px;
+  }
+  
+  .left {
+      position: relative; /* 一定要加上 relative */
+      left: -100px;
+  }
+  .right {
+      position: relative; /* 一定要加上 relative */
+      right: -200px;
+  }
+  ```
+
+- 双飞翼布局
+
+  通过浮动和负边距来实现。双飞翼布局相对于圣杯布局来说，左右位置的保留是通过中间列的 margin 值来实现的，而不是通过父元素的 padding 来实现的。
+
+  ```html
+  <div class="outer">
+    <div class="center">
+      <div class="wrapper">中间</div>
+    </div>
+    <div class="left">左</div>
+    <div class="right">右</div>
+  </div>
+  ```
+
+  ```css
+  /* 基本样式 */
+  .outer {
+    height: 100px;
+  }
+  
+  .center, .left, .right {
+    float: left;
+    height: 100px;
+  }
+  
+  .left {
+    width: 100px;
+    height: 100px;
+    background: tomato;
+    margin-left: -100%; /* 让 left 与 center 在同一行显示 */
+  }
+  
+  .right {
+    width: 200px;
+    height: 100px;
+    background: gold;
+    margin-left: -200px; /* 让 right 与 center 在同一行显示 */
+  }
+  
+  .center {
+    width: 100%;
+    height: 100px;
+    background: lightgreen;
+  }
+  
+  /* 双飞翼样式 */
+  .wrapper {
+    height: 100px;
+    margin-left: 100px;
+    margin-right: 200px;
+  }
+  ```
+
+- flex 布局
+
+  左右两栏设置固定大小，中间一栏设置为 flex:1
+  
+  ```css
+  .outer {
+    display: flex;
+    height: 100px;
+  }
+  
+  .left {
+    width: 100px;
+    background: tomato;
+  }
+  
+  .right {
+    width: 100px;
+    background: gold;
+  }
+  
+  .center {
+    flex: 1;
+    background: lightgreen;
+  }
+  ```
+
+
+
+### 水平居中
+
+inline 元素
+
+```css
+text-align: center;
+```
+
+block 元素
+
+```css
+margin: 0 auto;
+```
+
+absolute 元素
+
+```css
+left: 50%;
+margin-left: -100px; /* 元素宽度的一半 */
+```
+
+
+
+### 垂直居中
+
+inline 元素
+
+```css
+line-height: 21px; /* line-height 的值等于 height 的值 */
+height: 21px;
+```
+
+absolute 元素
+
+```css
+top: 50%;
+margin-top: -100px; /* 元素高度的一半 */
+```
+
+```css
+transform: (-50%, -50%);
+```
+
+```css
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+margin: auto;
+```
+
+
+
+### 水平垂直居中
+
+- 利用绝对定位，先将元素的左上角通过 top:50% 和 left:50% 定位到页面的中心，然后再通过 translate 来将元素的中心点调整到页面的中心点。
+
+  > 该方法需要**考虑浏览器兼容问题。**
+
+  ```css
+  .parent {
+    position: relative;
+  }
+  .child {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  ```
+
+- 利用绝对定位，设置四个方向的值都为 0，并将 margin 设置为 auto，由于宽高固定，因此对应方向实现平分，可以实现水平和垂直方向上的居中。
+
+  > 该方法适用于**盒子有宽高**的情况
+
+  ```css
+  .parent {
+    position: relative;
+  }
+  .child {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  ```
+
+- 使用 flex 布局，通过 align-items: center 和 justify-content: center 设置容器的垂直和水平方向上为居中对齐，然后它的子元素也可以实现垂直和水平的居中。
+
+  > 该方法要**考虑兼容的问题**，该方法在移动端用的较多
+
+  ```css
+  .parent {
+    display: flex;
+    justify-content:center;
+    align-items:center;
+  }
+  ```
+
+
+
+### 对Flex布局的理解及其使用场景
 
 
 
