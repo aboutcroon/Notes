@@ -185,7 +185,7 @@ MDN对该方法的描述：
 
 
 
-### 对盒模型的理解
+### 🌈对盒模型的理解
 
 CSS3中的盒模型有以下两种：**标准盒子模型**、**IE盒子模型**
 
@@ -204,6 +204,10 @@ CSS3中的盒模型有以下两种：**标准盒子模型**、**IE盒子模型**
 
 - `box-sizing: content-box`表示标准盒模型（默认值）
 - `box-sizing: border-box`表示IE盒模型（怪异盒模型）
+
+> 若在页面最顶部声明了 DOCTYPE 类型，所有的浏览器都会把盒模型默认解释为标准盒模型：`<!DOCTYPE html>`。不然的话，IE 浏览器会将盒子模型解释为 IE 盒模型，FireFox 等会将其解释为标准盒模型
+>
+> 依然可以使用 css3 的 box-sizing 属性进行切换
 
 
 
@@ -625,6 +629,8 @@ z-index 属性在下列情况下会失效：
 
 三栏布局的具体实现：
 
+> 参考：https://zhuanlan.zhihu.com/p/58355168
+
 - 圣杯布局
 
   利用浮动和负边距来实现。**基本布局之后使用向左浮动，center 栏留出两边位置，然后使用相对定位将左右两栏通过`margin-left`定位到相应位置。**
@@ -874,259 +880,31 @@ margin: auto;
 
 
 
-## 1. 页面布局
+### 回流（重排）与重绘
 
-### 三栏布局
+浏览器使用流式布局模型 (Flow Based Layout)。页面渲染过程：
 
-题目：假设高度已知，请写出三栏布局，其中左栏、右栏宽度各为 300px，中间自适应。
+- 解析 HTML 构建 `DOM Tree`
 
+- 解析 CSS 构建 `CSSOM Tree`
 
+- 浏览器将上面两者结合，构建渲染树（Render Tree），渲染树只包含渲染网页所需的节点
 
-absolute 布局方式：
+- 有了`Render Tree`，我们就知道了所有节点的样式，然后计算他们在页面上的大小和位置，最后把节点绘制到页面上。
 
-```html
-<body>
-  <section class="absolute">
-    <div class="wrapper">
-      <div class="left">left</div>
-      <div class="center">center</div>
-      <div class="right">right</div>
-    </div>
-  
-    <style type="text/css">
-    .absolute .wrapper{
-      width: 100%;
-      height: 100px;
-      position: relative;
-    }
-    .absolute .wrapper div {
-      height: 100px;
-    }
-    .absolute .left{
-      position: absolute;
-      left: 0;
-      width: 300px;
-      background: red;
-    }
-    .absolute .center{
-      position: absolute;
-      left: 300px;
-      right: 300px;
-      background: yellow;
-    }
-    .absolute .right{
-      position: absolute;
-      right: 0;
-      width: 300px;
-      background: blue;
-    }
-    </style>
-  </section>
-</body>
-```
+  > 由于浏览器使用流式布局，对`Render Tree`的计算通常只需要遍历一次就可以完成。
+  >
+  > 但`table`及其内部元素除外，他们可能需要多次计算，通常要花3倍于同等元素的时间，这也是为什么要避免使用`table`布局的原因之一。
 
 
 
-flex 布局方式：
+当`Render Tree`中部分或全部元素的尺寸、结构、或某些属性发生改变时，浏览器重新渲染部分或全部文档的过程称为回流。
 
-```html
-<body>
-  <section class="flex">
-    <div class="wrapper">
-      <div class="left">left</div>
-      <div class="center">center</div>
-      <div class="right">right</div>
-    </div>
-
-   <style type="text/css">
-    .flex {
-      margin-top: 100px;
-    }
-    .flex .wrapper{
-      width: 100%;
-      height: 100px;
-      display: flex;
-    }
-    .flex .left{
-      width: 300px;
-      background: red;
-    }
-    .flex .center{
-      flex: 1;
-      background: yellow;
-    }
-    .flex .right{
-      width: 300px;
-      background: blue;
-    }
-    </style>
-  </section>
-</body>
-```
+> 每个页面至少需要一次回流，就是在页面第一次加载的时候，这时候是一定会发生回流的，因为要构建`render tree`。
 
 
 
-### 水平垂直居中
-
-absolute + transform
-
-> 兼容性依赖 translate，但不需要知道子元素宽高
-
-```html
-<style type="text/css">
-  .out{
-    position: relative;
-    width: 300px;
-    height: 300px;
-    background: red;
-  }
-
-  .inner{
-    position: absolute;
-    background: yellow;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-</style>
-```
-
-
-
-absolute + margin: auto
-
-> 这种方法兼容性很好，缺点是需要知道子元素的宽高
-
-```html
-<style type="text/css">
-  .out {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    background: red;
-  }
-
-  .inner {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: yellow;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-  }
-</style>
-```
-
-
-
-absolute + calc（absolute + 负 margin）
-
-> 这种方法的兼容性依赖于 calc，且也需要知道宽高。与 absolute + 负 margin 的方案类似
-
-```html
-<style type="text/css">
-  .out{
-    position: relative;
-    width: 300px;
-    height: 300px;
-    background: red;
-  }
-
-  .inner{
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: yellow;
-    left: calc(50% - 50px);
-    top: calc(50% - 50px);
-  }
-</style>
-```
-
-
-
-
-
-flex
-
-> flex 实现起来比较简单，三行代码即可搞定，可通过父元素指定子元素的对齐方式。
-
-```html
-<style type="text/css">
-  .out{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 300px;
-    height: 300px;
-    background: red;
-  }
-
-  .inner{
-    background: yellow;
-    width: 100px;
-    height: 100px;
-  }
-</style>
-```
-
-
-
-## 2. CSS盒模型
-
-面试问题：
-
-- 基本概念：标准模型 + IE模型
-- 标准模型 和 IE模型的区别
-- CSS如何设置这两种模型
-- JS如何设置和获取盒模型对应的宽和高
-- 实例题（根据盒模型解释边距重叠）
-- BFC（边距重叠解决方案）
-
-
-
-### 1. 标准模型 与 IE模型的区别
-
-标准模型与 IE 模型的区别在于宽高的计算方式不同。
-
-标准模型：content 的宽高
-
-IE模型：content + padding + border 的宽高
-
-
-
-### 2. 如何设置这两种模型
-
-```css
-//设置标准模型
-box-sizing: content-box;
-
-//设置IE模型
-box-sizing: border-box;
-```
-
-> box-sizing 的默认值是 content-box，即默认标准模型。
-
-### 3. JS 如何设置盒模型的宽高
-
-假设已经获得的节点为 `dom`
-
-```js
-//只能获取内联样式设置的宽高
-dom.style.width/height
-
-//获取渲染后即时运行的宽高，值是准确的。但只支持 IE
-dom.currentStyle.width/height
-
-//获取渲染后即时运行的宽高，值是准确的。兼容性更好
-window.getComputedStyle(dom).width/height;
-
-//获取渲染后即时运行的宽高，值是准确的。兼容性也很好，一般用来获取元素的绝对位置，getBoundingClientRect()会得到4个值：left, top, width, height
-dom.getBoundingClientRect().width/height;
-```
+当页面中元素样式的改变并不影响它在文档流中的位置时（例如：`color`、`background-color`、`visibility`等），浏览器会将新样式赋予给元素并重新绘制它，这个过程称为重绘。
 
 
 
