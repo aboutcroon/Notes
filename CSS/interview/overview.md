@@ -888,23 +888,113 @@ margin: auto;
 
 - 解析 CSS 构建 `CSSOM Tree`
 
-- 浏览器将上面两者结合，构建渲染树（Render Tree），渲染树只包含渲染网页所需的节点
+- 浏览器将上面两者结合，构建渲染树（Render Tree），渲染树只包含渲染网页所需的节点。
 
-- 有了`Render Tree`，我们就知道了所有节点的样式，然后计算他们在页面上的大小和位置，最后把节点绘制到页面上。
+- 有了`Render Tree`，我们就能计算他们在页面上的大小和位置，然后结合所有节点的样式，最后把节点绘制到页面上。
 
   > 由于浏览器使用流式布局，对`Render Tree`的计算通常只需要遍历一次就可以完成。
   >
-  > 但`table`及其内部元素除外，他们可能需要多次计算，通常要花3倍于同等元素的时间，这也是为什么要避免使用`table`布局的原因之一。
+  > 但`table`及其内部元素除外，他们可能需要**多次计算**，通常要花 3 倍于同等元素的时间，这也是为什么要避免使用`table`布局的原因之一。
 
 
 
-当`Render Tree`中部分或全部元素的尺寸、结构、或某些属性发生改变时，浏览器重新渲染部分或全部文档的过程称为回流。
+**流程图**
+
+![render png](https://raw.githubusercontent.com/aboutcroon/Notes/main/CSS/interview/assets/render.png)
+
+
+
+**概念**
+
+当`Render Tree`中部分或全部元素的尺寸、结构、或某些属性发生改变时，浏览器会重新计算元素在页面上的大小和位置，并进行部分或全部文档的渲染，这个过程称为回流。
 
 > 每个页面至少需要一次回流，就是在页面第一次加载的时候，这时候是一定会发生回流的，因为要构建`render tree`。
 
-
-
 当页面中元素样式的改变并不影响它在文档流中的位置时（例如：`color`、`background-color`、`visibility`等），浏览器会将新样式赋予给元素并重新绘制它，这个过程称为重绘。
+
+
+
+会导致回流的操作：
+
+- 页面首次渲染
+
+- 浏览器窗口大小发生变化
+
+- 元素尺寸、位置发生变化
+
+- 元素内容变化（文字数量、图片大小等）
+
+- 元素字体大小变化
+
+- 添加或删除可见的 DOM 元素
+
+- 激活 CSS 伪类（例如：hover）
+
+- 🌈查询某些属性或调用某些方法
+
+  属性：
+
+  `clientWidth`、`clientHeight`、`clientTop`、`clientLeft`
+  `offsetWidth`、`offsetHeight`、`offsetTop`、`offsetLeft`
+  `scrollWidth`、`scrollHeight`、`scrollTop`、`scrollLeft`
+
+  方法：
+
+  `window.resize()`
+
+  `scrollTo()`
+
+  `scrollIntoView()`
+
+  `scrollIntoViewIfNeeded()`
+
+  `getComputedStyle()`
+
+  `getBoundingClientRect()`
+
+
+
+**性能影响**
+
+**回流比重绘的代价要更高。**
+
+有时即使仅仅回流一个单一的元素，它的父元素以及任何跟随它的元素也会产生回流。
+
+
+
+现代浏览器会对频繁的回流或重绘操作进行优化：
+
+浏览器会维护一个队列，把所有引起回流和重绘的操作放入队列中，如果队列中的任务数量或者时间间隔达到一个阈值时，浏览器就会将队列清空，进行一次批处理，这样可以把多次回流和重绘变成一次。
+
+但当你访问以下属性或方法时，浏览器会立刻清空队列：
+
+`clientWidth`、`clientHeight`、`clientTop`、`clientLeft`
+`offsetWidth`、`offsetHeight`、`offsetTop`、`offsetLeft`
+`scrollWidth`、`scrollHeight`、`scrollTop`、`scrollLeft`
+`width`、`height`
+`getComputedStyle()`
+`getBoundingClientRect()`
+
+因为队列中可能会有影响到这些属性或方法返回值的操作，即使你希望获取的信息与队列中操作引发的改变无关，浏览器也会强行清空队列，**确保你拿到的值是最精确的**。
+
+
+
+**如何避免**
+
+CSS：
+
+- 避免使用 table 布局
+- 尽可能在 DOM 树的最末端改变 class
+- 避免设置多层内联样式
+- 对具有复杂动画的元素使用绝对定位，使它脱离文档流（position 为 absolute 或 fixed），否则会引起父元素及后续其他元素的频繁回流
+- 非必要不使用 CSS 表达式（例如 calc()）
+
+JS：
+
+- 避免频繁操作样式，最好合并成一次操作
+- 避免频繁操作 DOM，可以创建一个 documentFragment 对象去操作 DOM，最后再把它添加到文档中
+- 先将元素设置为 display: none，然后对其进行多次 DOM 操作之后，再放回页面上
+- 避免频繁读取会引发回流与重绘的属性，如果需要多次使用，就用一个变量缓存起来
 
 
 
