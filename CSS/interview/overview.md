@@ -1432,3 +1432,19 @@ div {
 }
 ```
 
+将元素的长宽都设为 0，显示出来的效果是这样的：
+
+![triangle](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/interview/assets/triangle.png)
+
+所以我们可以根据 border 这个特性来绘制三角形
+
+```css
+div {
+  width: 0;
+  height: 0;
+  border-top: 50px solid red;
+  border-right: 50px solid transparent;
+  border-left: 50px solid transparent;
+}
+```
+
