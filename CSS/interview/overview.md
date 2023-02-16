@@ -495,27 +495,31 @@ CSSSprites（雪碧图），将一个页面涉及到的所有图片都包含到�
 
 
 
-### 单行、多行文本溢出隐藏
+### 🔴 单行、多行文本溢出省略号
 
-- 单行文本溢出
-
-```css
-overflow: hidden;            // 溢出隐藏
-text-overflow: ellipsis;      // 溢出用省略号显示
-white-space: nowrap;         // 规定段落中的文本不进行换行
-```
-
-- 多行文本溢出
+单行
 
 ```css
-overflow: hidden;            // 溢出隐藏
-text-overflow: ellipsis;     // 溢出用省略号显示
-display: -webkit-box;         // 作为弹性伸缩盒子模型显示。
--webkit-box-orient: vertical; // 设置伸缩盒子的子元素排列方式：从上到下垂直排列
--webkit-line-clamp: 3;        // 显示的行数
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 ```
 
-注意：由于上面的三个属性都是 CSS3 的属性，没有浏览器可以兼容，所以要在前面加一个`-webkit-`来兼容一部分浏览器。
+多行
+
+```css
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;  /* 作为弹性伸缩盒子模型显示 */
+  -webkit-box-orient: vertical; /* 设置伸缩盒子的子元素排列方式：从上到下垂直排列 */	
+  -webkit-line-clamp: 2; /* 显示的行数 */
+}
+```
+
+注意：由于上面的三个属性都是 CSS3 的属性，所以要在前面加一个`-webkit-`来兼容一部分浏览器。
 
 
 
@@ -846,6 +850,8 @@ CSS 隔离是将 CSS 样式通过特殊方法安置在独立环境中，暂时�
 | 预处理器    | 同 BEM，利用嵌套实现                             | 简单，提高开发效率                       | 需要借助相关的编译工具                                       |
 | Shadow DOM  | 浏览器原生 CSS sandbox 支持的一种封装隔离        | 原生支持                                 | 只适用于特定场景，且有浏览器兼容问题                         |
 | Vue scoped  | Vue 内置的样式隔离方案                           | 简单好用                                 | 只适用于 Vue 框架                                            |
+
+
 
 
 
@@ -1447,4 +1453,105 @@ div {
   border-left: 50px solid transparent;
 }
 ```
+
+![triangle-bottom](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/interview/assets/triangle-bottom.png)
+
+```css
+div {
+  width: 0;
+  height: 0;
+  border-bottom: 50px solid red;
+  border-right: 50px solid transparent;
+  border-left: 50px solid transparent;
+}
+```
+
+![triangle-top](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/interview/assets/triangle-top.png)
+
+```css
+div {
+  width: 0;
+  height: 0;
+  border-right: 50px solid red;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+}
+```
+
+![triangle-left](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/interview/assets/triangle-left.png)
+
+
+
+```css
+div {
+  width: 0;
+  height: 0;
+  border-left: 50px solid red;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+}
+```
+
+![triangle-right](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/interview/assets/triangle-right.png)
+
+
+
+总体的原则就是通过上下左右的 border 来控制三角形的方向，**用 border 的宽度比来控制三角形的角度**。
+
+
+
+🔴 画 0.5px 的线
+
+> 参考：https://juejin.cn/post/6844903582370643975
+
+**采用 transform: scale() 的方式**，该方法用来定义元素的 2D 缩放转换
+
+```css
+.before {
+  width: 10px;
+  height: 1px;
+  background: black;
+}
+
+.after {
+  width: 10px;
+  height: 1px;
+  background: black;
+  transform: scaleY(0.5);
+  transform-origin: 50% 100%; /* 距离x轴左侧偏移50%，距离y轴顶部偏移100% */
+}
+```
+
+通过 `transform: scale` 会导致 Chrome 上的线条变虚，而粗细几乎没有变化。我们可以指定变换的原点，加上这个 [transform-origin](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin) 就不会有虚化
+
+
+
+**采用 box-shadow 的方式**
+
+```css
+.before {
+  width: 10px;
+  height: 1px;
+  background: black;
+}
+
+.after {
+  width: 10px;
+  height: 1px;
+  background: none;
+  box-shadow: 0 0.5px 0 #000; /* x偏移量0，y偏移量0.5px，阴影模糊半径0，阴影颜色#000 */
+}
+```
+
+设置 [box-shadow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/box-shadow) 的第二个参数为 0.5px，表示阴影垂直方向的偏移为 0.5px
+
+
+
+**采用 meta viewport 的方式（移动端）**
+
+```css
+<meta name="viewport" content="width=device-width, initial-scale=0.5, minimum-scale=0.5, maximum-scale=0.5"/>
+```
+
+这样就能缩放到原来的 0.5 倍，如果是 1px 那么就会变成 0.5 px。viewport 只针对于移动端，只在移动端上才能看到效果
 
