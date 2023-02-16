@@ -623,7 +623,229 @@ z-index 属性在下列情况下会失效：
 
 ### 🔴 CSS 样式隔离的手段
 
+**概念**
 
+CSS 没有本地作用域，一旦生效就会应用于全局，所以很容易出现冲突。
+
+`SPA应用`流行了之后这个问题变得更加突出了，因为对于 SPA 应用来说所有页面的样式代码都会加载到同一个环境中，样式冲突的概率会大大加大。
+
+带来以下弊端：
+
+- 样式冲突
+
+- 很难为选择器起名字
+
+- 团队多人协作困难
+
+- 无用的 CSS 样式堆积
+
+  > 我们很难辨认出项目中哪些CSS样式代码是有用的哪些是无用的，这就导致了我们不敢轻易删除代码中可能是无用的样式。这样随着时间的推移，项目中无用的 CSS 样式就会堆积，**项目变得越来越重量级**，**开发成本越来越高**
+
+- 不利于基于状态的样式定义
+
+  > 对于 SPA 应用来说，特别是一些交互复杂的页面，页面的样式通常要根据组件的状态变化而发生变化，通常是通过不同的状态定义不同的`className名`，没有样式隔离的话类名的定义就很容易冲突
+
+
+
+CSS 样式隔离就是为了解决这些问题。
+
+抛开微前端的概念不谈，就算当前流行的前端框架也在解决 CSS 隔离的路上做出了相应的动作，其中就有 Vue，虽然 React 并没有对 CSS 隔离做处理，但是 React 关于这方面的插件也不少，开源的解决方案也特别多。
+
+CSS 隔离是将 CSS 样式通过特殊方法安置在独立环境中，暂时避免和其他 CSS 污染。
+
+
+
+**方案**
+
+1. BEM（Block Element Modifier）
+
+   一种命名方法论，例如以 `.block__element--modifier`或者说`block-name__element-name--modifier-name`形式命名，命名有含义，也就是`模块名 + 元素名 + 修饰器名`
+
+2. CSS Modules
+
+   顾名思义，CSS Modules 就是将 CSS 代码模块化，可以避免本模块样式被污染，并且可以很方便的复用 CSS 代码
+
+   根据`CSS Modules`在Gihub上的[项目](https://link.juejin.cn/?target=https%3A%2F%2Fgithub.com%2Fcss-modules%2Fcss-modules)，它被解释为：所有的类名和动画名称默认都有各自的作用域的 CSS 文件
+
+   所以`CSS Modules`既不是官方标准，也不是浏览器的特性，而是**在构建步骤（例如使用 Webpack，记住 css-loader）中对 CSS 类名和选择器`限定作用域`的一种方式**（类似于命名空间）
+
+   依赖`webpack css-loader`，配置如下，现在 Webpack 已经默认开启 CSS Modules 功能了
+
+   ```js
+   {
+     test: /.css$/,
+     loader: "style-loader!css-loader?modules"
+   }
+   ```
+
+   我们先看一个示例：
+
+   将`CSS`文件`style.css`引入为`style`对象后，通过`style.title`的方式使用`title class`：
+
+   ```jsx
+   import style from './style.css';
+   
+   export default () => {
+     return (
+       <p className={style.title}>
+         I am KaSong.
+       </p>
+     );
+   };
+   ```
+
+   对应`style.css`：
+
+   ```css
+   .title {
+     color: red;
+   }
+   ```
+
+   打包工具会将`style.title`编译为`带哈希的字符串`
+
+   ```jsx
+   <h1 class="_3zyde4l1yATCOkgn-DBWEL">
+     Hello World
+   </h1>
+   ```
+
+   同时`style.css`也会编译：
+
+   ```css
+   ._3zyde4l1yATCOkgn-DBWEL {
+     color: red;
+   }
+   ```
+
+   这样，就产生了独一无二的`class`，解决了`CSS`模块化的问题
+
+   使用了 CSS Modules 后，就相当于给每个 class 名外加加了一个 `:local`，以此来实现样式的局部化，如果你想切换到全局模式，使用对应的 `:global`。
+
+   `:local` 与 `:global` 的区别是 CSS Modules 只会对 `:local` 块的 class 样式做 `localIdentName` 规则处理，`:global` 的样式编译后不变
+
+   ```css
+   .title {
+     color: red;
+   }
+   
+   :global(.title) {
+     color: green;
+   }
+   ```
+
+   可以看到，依旧使用CSS，但使用JS来管理样式依赖， 最大化地结合现有 CSS 生态和 JS 模块化能力，发布时依旧编译出单独的 JS 和 CSS
+
+3. CSS in JS
+
+   `CSS in JS`是2014年推出的一种**设计模式**，它的核心思想是`把CSS直接写到各自组件中`，也就是说`用JS去写CSS`，而不是单独的样式文件里
+
+   > CSS-in-JS在`React社区`的热度是最高的，这是因为 React 本身不会管用户怎么去为组件定义样式的问题，而 Vue 和 Angular 都有属于框架自己的一套定义样式的方案
+
+   上面的例子使用 React 改写如下
+
+   ```js
+   const style = {
+     color: 'red',
+     fontSize: '46px'
+   };
+   
+   const clickHandler = () => alert('hi'); 
+   
+   ReactDOM.render(
+     <h1 style={style} onclick={clickHandler}>
+        Hello, world!
+     </h1>,
+     document.getElementById('example')
+   );
+   ```
+
+   上面代码在一个文件里面，封装了**结构、样式和逻辑**，完全违背了 `关注点分离` 的原则
+
+   但是，这有利于 `组件的隔离`。每个组件包含了所有需要用到的代码，不依赖外部，组件之间没有耦合，很方便复用。所以，随着 React 的走红和组件模式深入人心，这种 `关注点混合` 的新写法逐渐成为主流。
+
+4. CSS 预处理器
+
+   利用预处理器的嵌套语法，人为严格遵守嵌套首类名不一致，可以解决无作用域样式污染问题，需要借助编译工具的处理。
+
+   我们常见的预处理器（[PostCSS](https://link.juejin.cn/?target=http%3A%2F%2Fpostcss.org%2F) 是后处理器）：
+
+   - [Sass](https://link.juejin.cn/?target=https%3A%2F%2Fsass-lang.com%2F)
+   - [LESS](https://link.juejin.cn/?target=https%3A%2F%2Flesscss.org%2F)
+   - [Stylus](https://link.juejin.cn/?target=http%3A%2F%2Fstylus-lang.com%2F)
+
+5. Shadow DOM
+
+   Web components 的一个重要属性是封装——可以将标记结构、样式和行为隐藏起来，并与页面上的其他代码相隔离，保证不同的部分不会混在一起，可使代码更加干净、整洁。其中，Shadow DOM 接口是关键所在，它可以将一个隐藏的、独立的 DOM 附加到一个元素上。
+
+   Shadow DOM 不是一个新事物，在过去的很长一段时间里，浏览器用它来封装一些元素的内部结构。以一个有着默认播放控制按钮的 [`<video>`](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video) 元素为例。你所能看到的只是一个 `<video>` 标签，实际上，在它的 Shadow DOM 中，包含了一系列的按钮和其他控制器。Shadow DOM 标准允许你为你自己的元素（custom element）维护一组 Shadow DOM。
+
+   也就是说这样样式可以只对一定范围内的 DOM 结构起作用，也就起到了样式隔离的效果。
+
+6. Vue scoped
+
+   当 `<style>` 标签有 `scoped` 属性时，它的 `CSS` 只作用于当前组件中的元素
+
+   通过使用 `PostCSS` 来实现以下代码的转换：
+
+   ```html
+   <style scoped>
+   .example {
+     color: red;
+   }
+   </style>
+   
+   <template>
+     <div class="example">hi</div>
+   </template>
+   ```
+
+   转换结果：
+
+   ```html
+   <style>
+   .example[data-v-f3f3eg9] {
+     color: red;
+   }
+   </style>
+   
+   <template>
+     <div class="example" data-v-f3f3eg9>hi</div>
+   </template>
+   ```
+
+   使用 `scoped` 后，**父组件的样式将不会渗透到子组件中**
+
+   不过一个子组件的根节点会同时受其父组件的 scoped CSS 和子组件的 scoped CSS 的影响。这样设计是为了让父组件可以从布局的角度出发，调整其子组件根元素的样式，父组件可以利用`深度作用选择器`来影响所有子组件样式
+
+   可以使用 `>>>` 操作符：
+
+   ```html
+   <style scoped>
+   .a >>> .b { /* ... */ }
+   </style>
+   ```
+
+   上述代码将会编译成：
+
+   ```css
+   .a[data-v-f3f3eg9] .b { /* ... */ }
+   ```
+
+   有些像 `Sass` 之类的预处理器无法正确解析 `>>>`。这种情况下你可以使用 `/deep/` 或 `::v-deep` 操作符取而代之——两者都是 `>>>` 的别名，同样可以正常工作。
+
+
+
+**总结**
+
+|             | 概念                                             | 优点                                     | 缺点                                                         |
+| ----------- | ------------------------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
+| BEM         | 不同项目用不同的前缀，人为遵守命名规则来避免冲突 | 简单                                     | 需要人为约束，且有时命名太长                                 |
+| CSS Modules | 通过编译生成不冲突的选择器类名                   | 可靠，易用                               | 需要频繁的写 style.xxx，只能在构建期使用，依赖打包工具如 css-loader |
+| CSS in JS   | CSS 和 JS 编码在一起最终生成不冲突的选择器       | 彻底避免冲突，且和 JS 结合，写起来较灵活 | 是在在客户端动态生成 CSS 的，所以运行时开销较大，可读性较差，不能结合预处理器使用 |
+| 预处理器    | 同 BEM，利用嵌套实现                             | 简单，提高开发效率                       | 需要借助相关的编译工具                                       |
+| Shadow DOM  | 浏览器原生 CSS sandbox 支持的一种封装隔离        | 原生支持                                 | 只适用于特定场景，且有浏览器兼容问题                         |
+| Vue scoped  | Vue 内置的样式隔离方案                           | 简单好用                                 | 只适用于 Vue 框架                                            |
 
 
 
@@ -952,10 +1174,6 @@ margin: auto;
 
 
 
-### 对Flex布局的理解及其使用场景
-
-
-
 ### 🔴 回流（重排）与重绘
 
 浏览器使用流式布局模型 (Flow Based Layout)。页面渲染过程：
@@ -1078,31 +1296,139 @@ JS：
 
 
 
-## 3. BFC
+### 🔴 对 BFC 的理解
 
-Block Formatting Context（块级格式化上下文）
+**概念**
 
+Box：CSS 布局的对象和基本单位，一个页面是由很多个 Box 组成的，这个 Box 就是我们所说的盒模型
 
+Formatting context：块级上下文格式化，它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素之间的关系和相互作用
 
-## 4. flex
-
-### flex:1 是由哪些属性组成，分别代表什么意思？
-
-flex-grow: 增长系数，flex 容器中分配剩余空间的相对比例
-
-flex-shrink: 收缩系数，当 flex 容器宽度不够时进行收缩的大小
-
-flex-basis: 元素在主轴方向上的初始大小
+Block Formatting Context（块级格式化上下文），是 Web 页面的可视化 CSS 渲染的一部分，是布局过程中生成块级盒子的区域，也是浮动元素与其他元素的交互限定区域
 
 
 
-初始: 0 1 auto
-
-flex-1: 1 1 0
-
-flex-auto: 1 1 auto
+通俗来讲，BFC是一个独立的布局环境，可以理解为一个容器，在这个容器中按照一定规则进行物品摆放，并且不会影响其他环境中的物品。如果一个元素符合触发 BFC 的条件，则 BFC 中的元素布局将不受外界影响。
 
 
 
-参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex
+**创建 BFC 的条件**
+
+- 根元素：body
+- 元素设置浮动，float 除 none 以外的值
+- 元素设置绝对定位，position 为 absolute 或 fixed
+- display 设置为 inline-block, flex, table-cell, table-caption 等
+- overflow 设置为 hidden, auto, scroll
+
+
+
+**BFC 的特点**
+
+- 垂直方向上，自上而下排列，和文档流的排列方式一致
+- 在 BFC 中上下相邻的两个容器的 margin 会重叠
+- 计算 BFC 的高度时，需要计算浮动元素的高度
+- BFC 区域不会与浮动的容器发生重叠
+- BFC 是独立的容器，容器内部元素不会影响外部元素
+- 每个元素的左 margin 值和容器的左 border 相接触
+
+
+
+**BFC 的作用**
+
+- **解决 margin 重叠问题**：由于 BFC 是一个独立的区域，内部的元素和外部的元素互不影响，将两个元素变为两个 BFC，就解决了 margin 重叠的问题。
+
+- **解决高度塌陷的问题**：在对子元素设置浮动后，父元素会发生高度塌陷，也就是父元素的高度变为0。解决这个问题，只需要把父元素变成一个 BFC。常用的办法是给父元素设置`overflow:hidden`。
+
+- **创建自适应两栏布局**：可以用来创建自适应两栏布局：左边的宽度固定，右边的宽度自适应。
+
+  ```css
+  .left{
+       width: 100px;
+       height: 200px;
+       background: red;
+       float: left;
+   }
+   .right{
+       height: 300px;
+       background: blue;
+       overflow: hidden;
+   }
+  
+  <div class="left"></div>
+  <div class="right"></div>
+  ```
+
+
+
+### 🔴 [flex: 1](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex)
+
+flex: 1 是一个 CSS 简写属性，是以下属性的简写：
+
+- [`flex-grow`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex-grow)：增长系数，flex 容器中分配剩余空间的相对比例
+- [`flex-shrink`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex-shrink)：收缩系数，当 flex 容器宽度不够时进行收缩的大小
+- [`flex-basis`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex-basis)：**元素在主轴方向上的初始大小**
+
+
+
+可以使用 1 个，2 个或 3 个值来指定 flex 属性
+
+**单值语法**: 值必须为以下其中之一
+
+- 🔴 **一个无单位数 ，它会被当作 flex-grow 的值，然后 flex-shrink 的值被假定为 1，flex-basis 的值被假定为 0**
+- 一个有效的宽度值，它会被当作 flex-basis 的值
+- 关键字 none，auto 或 initial
+
+**双值语法**: 第一个值必须为一个无单位数，并且它会被当作 flex-grow 的值。第二个值必须为以下之一：
+
+- 一个无单位数：它会被当作 flex-shrink 的值
+- 一个有效的宽度值：它会被当作 flex-basis 的值
+
+**三值语法：**
+
+- 第一个值必须为一个无单位数，并且它会被当作 flex-grow 的值。
+- 第二个值必须为一个无单位数，并且它会被当作 flex-shrink 的值。
+- 第三个值必须为一个有效的宽度值，并且它会被当作 flex-basis 的值。
+
+
+
+**关键字**
+
+initial（默认值）：元素会根据自身宽高设置尺寸。它会缩短自身以适应 flex 容器，但不会伸长并吸收 flex 容器中的额外自由空间来适应 flex 容器。相当于将属性设置为`flex: 0 1 auto`。
+
+auto：元素会根据自身的宽度与高度来确定尺寸，但是会伸长并吸收 flex 容器中额外的自由空间，也会缩短自身来适应 flex 容器。这相当于将属性设置为 "`flex: 1 1 auto`".
+
+none：元素会根据自身宽高来设置尺寸。它是完全非弹性的：既不会缩短，也不会伸长来适应 flex 容器。相当于将属性设置为"`flex: 0 0 auto`"。
+
+
+
+## 3. 定位与浮动
+
+### 🔴 Position 的属性有哪些，作用是什么
+
+| 属性值   | 概述                                                         |
+| -------- | ------------------------------------------------------------ |
+| static   | 默认值，没有定位，元素出现在正常的文档流中，会忽略 top, bottom, left, right 或者 z-index 声明，块级元素从上往下纵向排布，⾏级元素从左往右横向排列。 |
+| absolute | 生成绝对定位的元素，相对于 static 定位之外（absolute/relative/fixed）的一个父元素进行定位（如果没找到就以浏览器边界定位）。元素的位置通过 left、top、right、bottom 属性进行规定。 |
+| relative | 生成相对定位的元素，相对于其原来的位置进行定位。元素的位置通过 left、top、right、bottom 属性进行规定。 |
+| fixed    | 生成绝对定位的元素，相对于屏幕视⼝（viewport）的位置来进行定位，元素的位置在屏幕滚动时不会改变，⽐如回到顶部的按钮⼀般都是⽤此定位⽅式。通过 left、top、right、bottom 属性指定元素位置。 |
+| inherit  | 规定从父元素继承 position 属性的值                           |
+
+
+
+## 4. 场景应用
+
+### 🔴 画三角形
+
+CSS绘制三角形主要用到的是 border 属性
+
+平时在给盒子设置边框时，往往都设置很窄，就可能误以为边框是由矩形组成的。**实际上，border 属性是由三角形组成的**，下面看一个例子：
+
+```css
+div {
+  width: 0;
+  height: 0;
+  border: 100px solid;
+  border-color: orange blue red green;
+}
+```
 

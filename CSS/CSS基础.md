@@ -319,11 +319,11 @@ div 块级元素，width 自动为 100% 占满整行，但高度不会
 
 # 18. 业务
 
-父级元素可以使用flex定位，使内部绝对定位的子元素居中
-
-
+父级元素可以使用 flex 定位，使内部绝对定位的子元素居中
 
 transform: translate 只能用于 block 元素
+
+`cursor: not-allowed` 不能与 `pointer-events:none` 同时使用
 
 
 
