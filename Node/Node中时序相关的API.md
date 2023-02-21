@@ -48,3 +48,14 @@ while (还有事件在监听) {
 
 一个 `setTimeout` 可以是一个 Timer 事件，一个文件读写是一个系统的 I/O 事件。对于浏览器来说，通常是没有后者的。而处理系统 I/O 事件，各系统平台早在多年前就有了成熟的方案了。如 Linux 的 epoll、macOS 的 kqueue、Windows 的 IOCP 等，这些统称为 I/O 多路复用。
 
+
+
+Node.js 的事件循环基石就基于此。它**基于 Ryan Dahl 自己开发的** **libuv** **，完成了自己的事件循环与异步** **I/O**。
+
+
+
+libuv 是一个聚焦异步 I/O 的跨平台库。它就是为 Node.js 而生的，后续才衍生出对其他项目的支持，如 [Luvit](https://link.juejin.cn/?target=https%3A%2F%2Fluvit.io%2F)、[Julia](https://link.juejin.cn/?target=https%3A%2F%2Fjulialang.org%2F)、[uvloop](https://link.juejin.cn/?target=https%3A%2F%2Fgithub.com%2FMagicStack%2Fuvloop) 等（[更多](https://link.juejin.cn/?target=https%3A%2F%2Fgithub.com%2Flibuv%2Flibuv%2Fblob%2Fv1.x%2FLINKS.md)）。
+
+libuv 官网文档上“设计概览”页中的流程图。
+
+![event I/O](https://raw.githubusercontent.com/edwineo/Notes/main/Node/assets/event%20I%3AO.png)
