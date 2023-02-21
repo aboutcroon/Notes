@@ -327,6 +327,19 @@ transform: translate 只能用于 block 元素
 
 
 
+vite 中使用 background-image
+
+```css
+.help-modal {
+  background: url("@/assets/images/img_help_center.png") center no-repeat;
+  background-size: 100% 100%;
+}
+```
+
+
+
+
+
 # 19. inherit
 
 ## line-height
