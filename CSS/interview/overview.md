@@ -963,9 +963,9 @@ CSS 中的以下几个属性能触发硬件加速：
 
 ### 🔴 如何做 CSS 动画
 
-创建动画序列，需要使用 [`animation`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation) 属性或其子属性，该属性允许配置动画时间、时长以及其他动画细节，但该属性不能配置动画的实际表现。
+**创建动画序列，需要使用 [`animation`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation) 属性或其子属性**，该属性允许配置动画时间、时长以及其他动画细节，但该属性不能配置动画的实际表现。
 
-动画的实际表现是由 [`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes) 规则实现，具体情况参见[使用 keyframes 定义动画序列](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations#使用_keyframes_定义动画序列)小节部分。
+**动画的实际表现是由 [`@keyframes`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes) 规则实现**，具体情况参见[使用 keyframes 定义动画序列](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations#使用_keyframes_定义动画序列)小节部分。
 
 
 
