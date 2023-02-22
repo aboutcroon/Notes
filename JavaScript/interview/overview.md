@@ -8,11 +8,11 @@
 
 ## 4.原型与原型链
 
-### 什么是原型与原型链
+### 🔴 什么是原型与原型链
 
 在 JavaScript 中是使用构造函数来新建一个对象的，每一个构造函数的内部都有一个 prototype 属性，它的属性值是一个对象，这个对象包含了可以由该构造函数的所有实例共享的属性和方法。**当使用构造函数新建一个对象后，在这个对象的内部将包含一个指针，这个指针指向构造函数的 prototype 属性对应的值，在 ES5 中这个指针被称为对象的原型**。
 
-现在浏览器中都实现了 proto 属性来访问这个对象的实例，但是最好不要使用这个属性，因为它不是规范中规定的。ES5 中新增了一个 Object.getPrototypeOf() 方法，可以通过这个方法来获取对象的原型。
+> 现在浏览器中都实现了 `__proto__` 属性来访问这个对象的原型，但是最好不要使用这个属性，因为它不是规范中规定的。ES5 中新增了一个 `Object.getPrototypeOf()` 方法，可以通过这个方法来获取对象的原型。
 
 
 
@@ -23,7 +23,7 @@
 ```js
 p.__proto__  // Person.prototype
 Person.prototype.__proto__  // Object.prototype
-p.__proto__.__proto__ //Object.prototype
+p.__proto__.__proto__ // Object.prototype
 p.__proto__.constructor.prototype.__proto__ // Object.prototype
 Person.prototype.constructor.prototype.__proto__ // Object.prototype
 p1.__proto__.constructor // Person
