@@ -405,8 +405,46 @@ await 暂停当前 async 的执行，所以 cug 最先输出，hello world 和 c
 
 ### 对象继承的方式有哪些
 
+```js
+// 父类
+function Person (name) {
+  this.name = name
+  this.sum = () => { alert(this.name) }
+}
+Person.prototype.age = 10 // 原型属性
+```
+
 1. 原型链的方式
+
+   ```js
+   function Per () {}
+   Per.prototype = new Person() // 重点：让新实例的原型指向父类的实例
+   ```
+
+   > 缺点：
+   >
+   > - 在包含有引用类型的数据时，会被所有的实例对象所共享，容易造成混乱
+   > - 在创建子类型的时候不能向父类构造函数传递参数
 2. 借用构造函数的方式
+
+   ```js
+   function Con () {
+     Person.call(this. 'jer') // 重点：在子类中通过.call()或.apply()调用父类的构造函数来实现，将父类构造函数绑定在子类构造函数上
+   }
+   const con1 = new Con()
+   console.log(con1.name) // jer
+   console.log(con1.age) // 12
+   ```
+
+   > 优点：
+   >
+   > - 不会共享引用类型的属性
+   > - 可以向父类构造函数传递参数
+   >
+   > 缺点：
+   >
+   > - 只能继承父类构造函数的属性，不能继承父类原型上的属性
+   > - 无法实现父类构造函数的复用，相同的函数在每个实例中都有一份
 3. 组合继承，将原型链与构造函数组合起来
 4. 原型式继承
 5. 寄生式继承
