@@ -1,4 +1,4 @@
-常见的攻击的类型以及防御的方法。
+以下是常见的 Web 攻击类型以及防御的方法
 
 ## XSS
 
@@ -90,7 +90,7 @@ app.listen(3000, () => {
 
 ![xss_2](https://raw.githubusercontent.com/edwineo/Notes/main/Web%E5%AE%89%E5%85%A8/assets/websesure_xss2.png)
 
-![xss_4](https://raw.githubusercontent.com/edwineo/Notes/main/Web%E5%AE%89%E5%85%A8/assets/websesure_xss4.png)
+![xss_4](https://raw.githubusercontent.com/edwineo/Notes/main/Web%E5%AE%89%E5%85%A8/assets/websecure_xss4.png)
 
 举个例子，对于评论功能来说，就得防范持久型 XSS 攻击，因为我可以在评论中输入一些恶意内容：
 

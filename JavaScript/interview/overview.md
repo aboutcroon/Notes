@@ -1,12 +1,25 @@
 ![overview](https://raw.githubusercontent.com/aboutcroon/Notes/main/JavaScript/interview/assets/js%20overview.png)
 
-## 1.数据类型
+## 1. 数据类型
 
-## 2.ES6
+## 2. ES6
 
-## 3.JavaScript 基础
+## 3. JavaScript 基础
 
-## 4.原型与原型链
+### 🔴 new 操作符做了什么事情
+
+执行过程：
+
+- 创建了一个新的空对象
+- 为新对象添加属性 `__proto__`，并将该属性指向构造函数的 prototype 属性
+- 将构造函数的 this 指向新对象，并执行构造函数内部的代码（为这个新对象添加属性）
+- 如果该构造函数没有返回对象，则返回 this
+
+
+
+
+
+## 4. 原型与原型链
 
 ### 🔴 什么是原型与原型链
 
@@ -48,7 +61,7 @@ function iterate(obj){
 
 
 
-## 5.闭包
+## 5. 闭包
 
 ### 什么是闭包
 
@@ -92,7 +105,7 @@ tabA 中请求表格数据，tabB中请求表格数据，但是 A 中数据量�
 
 - 使已经运行结束的函数上下文中的变量对象继续留在内存中，因为闭包函数保留了这个变量对象的引用，所以这个变量对象不会被垃圾回收。
 
-## 6.执行上下文，作用域链
+## 6. 执行上下文，作用域链
 
 ### 什么是作用域
 
@@ -147,16 +160,18 @@ tabA 中请求表格数据，tabB中请求表格数据，但是 A 中数据量�
 
 
 
-## 7.this
+## 7. this
 
 ### this 的概念
 
 this 是执行上下文的一个属性，它指向最后一次调用这个方法的对象
 
-### 判断 this 指向优先级
+### 🔴 有哪些方法改变 this 指向
+
+优先级按顺序
 
 1. **箭头函数**
-   创建箭头函数时，就已经确定了它的 this 指向，箭头函数内的 this 指向外层的 this。
+   创建箭头函数时，就已经确定了它的 this 指向，箭头函数内的 this 指向外层的 this
 
 2. **new**
    一个函数用 new 调用时，函数执行前会创建一个新对象，this 指向这个新对象。
@@ -181,7 +196,22 @@ this 是执行上下文的一个属性，它指向最后一次调用这个方法
 
 7. **在非严格模式下，如果得出 this 指向是 undefined 或 null，那么 this 都指向全局对象**
 
-## 8.call/apply/bind
+
+
+- nihaoma
+  - nihaode
+
+
+
+1. nihao
+   1. djsj
+
+
+
+> - 111
+> - 222
+
+## 8. call/apply/bind
 
 ### call 和 apply 的区别
 
@@ -403,34 +433,41 @@ await 暂停当前 async 的执行，所以 cug 最先输出，hello world 和 c
 5. 动态原型模式
 6. 寄生构造函数模式
 
-### 对象继承的方式有哪些
-
-```js
-// 父类
-function Person (name) {
-  this.name = name
-  this.sum = () => { alert(this.name) }
-}
-Person.prototype.age = 10 // 原型属性
-```
+### 🔴 对象继承的方式有哪些
 
 1. 原型链的方式
 
    ```js
+   // 父类
+   function Person (name) {
+     this.name = name
+     this.sum = () => { alert(this.name) }
+   }
+   Person.prototype.age = 10 // 原型属性
+   
    function Per () {}
    Per.prototype = new Person() // 重点：让新实例的原型指向父类的实例
    ```
 
    > 缺点：
    >
-   > - 在包含有引用类型的数据时，会被所有的实例对象所共享，容易造成混乱
+   > - 在包含有引用类型的数据时，会被所有的实例对象所共享
    > - 在创建子类型的时候不能向父类构造函数传递参数
+
 2. 借用构造函数的方式
 
    ```js
+   // 父类
+   function Person (name) {
+     this.name = name
+     this.sum = () => { alert(this.name) }
+   }
+   Person.prototype.age = 10 // 原型属性
+   
    function Con () {
      Person.call(this. 'jer') // 重点：在子类中通过.call()或.apply()调用父类的构造函数来实现，将父类构造函数绑定在子类构造函数上
    }
+   
    const con1 = new Con()
    console.log(con1.name) // jer
    console.log(con1.age) // 12
@@ -445,12 +482,140 @@ Person.prototype.age = 10 // 原型属性
    >
    > - 只能继承父类构造函数的属性，不能继承父类原型上的属性
    > - 无法实现父类构造函数的复用，相同的函数在每个实例中都有一份
-3. 组合继承，将原型链与构造函数组合起来
+
+3. 组合继承（将原型链与构造函数组合起来）
+
+   ```js
+   // 父类
+   function Person (name) {
+     this.name = name
+     this.sum = () => { alert(this.name) }
+   }
+   Person.prototype.age = 10 // 原型属性
+   
+   // 重点：结合了两种模式的优点，传参和复用
+   function SubType (name) {
+     Person.call(this, name) // 借用构造函数模式
+   }
+   SubType.prototype = new Person() // 借用原型链模式
+   SubType.prototype.constructor = SubType
+   
+   const sub = new SubType('gar')
+   console.log(sub.name) // 'gar'
+   console.log(sub.age) // 10
+   ```
+
+   > 优点：
+   >
+   > - 不会共享引用类型的属性
+   > - 可以向父类构造函数传递参数
+   > - 可以复用父类构造函数
+   >
+   > 缺点：
+   >
+   > - 需要调用两次父类构造函数（耗内存）
+   > - 子类的构造函数会代替原型上的那个父类构造函数，造成了子类型的原型中多了很多不必要的属性
+
 4. 原型式继承
+
+   ```js
+   // 父类
+   function Person (name) {
+     this.name = name
+     this.sum = () => { alert(this.name) }
+   }
+   Person.prototype.age = 10 // 原型属性
+   
+   // 用一个函数包装一个对象，然后返回这个函数的调用，这个函数就变成了个可以随意增添属性的实例或对象。object.create()就是这个原理。
+   function object (obj) {
+     function F () {}
+     F.prototype = obj
+     return new F()
+   }
+   
+   const sup = new Person()
+   const sup1 = object(sup) // Object.create(sup)
+   console.log(sup1.age) // 10
+   ```
+
+   > 缺点：
+   >
+   > - 与原型链方式相同
+
+   在 ECMAScript5 中新增了 Object.create() 方法，该方法规范了原型式继承。这个方法接收两个参数：一个用作新对象原型的对象，另一个是可选的，用于新对象定义额外的属性的对象。在只传入一个参数的情况下，Object.create() 与上面的 object() 方法行为相同。
+
 5. 寄生式继承
+
+   ```js
+   // 父类
+   function Person (name) {
+     this.name = name
+     this.sum = () => { alert(this.name) }
+   }
+   Person.prototype.age = 10 // 原型属性
+   
+   function object (o) {
+     function F () {}
+     F.prototype = o
+     return new F()
+   }
+   
+   function createAnother (original) {
+     const clone = object(original) // 通过调用函数创建一个新对象
+     clone.name = 'clone'
+     return clone // 返回这个对象
+   }
+   
+   const sup = new Person()
+   const sup2 = createAnother(sup)
+   console.log(sup2.name) // clone
+   ```
+
+   > 优点：
+   >
+   > - 对一个简单对象实现继承，如果这个对象不是自定义类型时
+   >
+   > 缺点：
+   >
+   > - 未用到原型，做不到函数复用
+
 6. 寄生式组合继承
 
-## 10. 垃圾回收与内存泄漏
+   ```js
+   function Parent (name) {
+     this.name = name
+     this.colors = ['red', 'blue', 'green']
+   }
+   Parent.prototype.getName = function () {
+     console.log(this.name)
+   }
+   
+   function Child (name, age) {
+     Parent.call(this, name) // 继承了父类构造函数的属性
+     this.age = age
+   }
+   
+   // 重点
+   // function object (obj) {
+   //   function F () {}
+   //   F.prototype = obj
+   //   return new F()
+   // }
+   // Child.prototype = object(Parent.prototype)
+   // 等价于
+   Child.prototype = Object.create(Parent.prototype)
+   Child.prototype.constructor = Child
+   
+   const child1 = new Child('kevin', '18')
+   
+   console.log(child1)
+   ```
+
+   > 优点：
+   >
+   > - 使用父类型的原型的副本作为子类型的原型，这样就避免了创建不必要的属性。
+
+## 11. 垃圾回收与内存泄漏
 
 ### 垃圾回收的概念
 
