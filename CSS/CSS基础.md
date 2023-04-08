@@ -350,4 +350,12 @@ line-height 可以直接继承父选择器的，但 height 不行，所以一般
 
 # 多行文本超出省略
 
-![ellipsis](../../../Desktop/ellipsis.png)
+注意实际场景
+
+![ellipsis](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/assets/ellipsis.png)
+
+
+
+产生问题的原因
+
+![ellipsis_gpt](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/assets/ellipsis_gpt.png)
