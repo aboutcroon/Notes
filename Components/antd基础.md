@@ -402,26 +402,28 @@ expandIcon (props) {
 
 ```html
 <a-table
-         class="mt24"
-         :columns="columns"
-         :data-source="userList"
-         :row-key="record => record.id"
-         :pagination="{
-                      total: total,
-                      current: pageNum,
-                      pageSize: pageSize,
-                      onShowSizeChange: onPageSizeChange,
-                      showSizeChanger: true,
-                      showQuickJumper: true,
-                      showTotal: total => `共 ${total} 条`
-                      }"
-         @change="onPageChange"
-         />
+   class="mt24"
+   :columns="columns"
+   :data-source="userList"
+   :row-key="record => record.id"
+   :pagination="{
+                total: total,
+                current: pageNum,
+                pageSize: pageSize,
+                onShowSizeChange: onPageSizeChange,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                showTotal: total => `共 ${total} 条`
+                }"
+   @change="onPageChange"
+ />
 ```
 
 pagination: showSizeChange, change
 
 table 中的 pagination：onShowSizeChange, onChange
+
+
 
 ## 4.6 customRender
 
@@ -668,4 +670,12 @@ const selectBlur = (e) => {
 ```
 
 如果在 autocomplete 框失去焦点时将输入的内容置空，那么鼠标再次点击 autocomplete 框时，无法弹出下拉选项，此时需要重新渲染一下 autocomplete。一定要加上 nextTick，不然时间过快相当于没有重新渲染。
+
+
+
+# Layout
+
+### a-row a-col
+
+a-col 里面如果需要填充背景色，最好里面加一层 div，不然背景色会填充到 gutter 的部分
 

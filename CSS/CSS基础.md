@@ -346,3 +346,8 @@ vite 中使用 background-image
 
 line-height 可以直接继承父选择器的，但 height 不行，所以一般有 `height: 100%`，但没有 line-height: 100%
 
+
+
+# 多行文本超出省略
+
+![ellipsis](../../../Desktop/ellipsis.png)

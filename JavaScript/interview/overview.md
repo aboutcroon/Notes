@@ -4,6 +4,17 @@
 
 ## 2. ES6
 
+### 🔴 ES6 有哪些新特性
+
+- let 和 const
+- 变量（数组，对象，字符串）的解构赋值
+- 正则表达式的扩展
+- String 的扩展，字符串的新增方法（matchAll, normalize），模版字符串等
+- Number 的扩展（Number.isInteger, Number.isNaN, Number.parseInt, Number.parseFloat），BigInt 数据类型
+- 函数的扩展，箭头函数，参数默认值
+
+
+
 ## 3. JavaScript 基础
 
 ### 🔴 new 操作符做了什么事情
@@ -198,28 +209,150 @@ this 是执行上下文的一个属性，它指向最后一次调用这个方法
 
 
 
-- nihaoma
-  - nihaode
-
-
-
-1. nihao
-   1. djsj
-
-
-
-> - 111
-> - 222
-
 ## 8. call/apply/bind
 
-### call 和 apply 的区别
+### 🔴 call 和 apply 的区别
 
 第一个参数都是指定函数体内 this 对象的指向，第二个参数都是作为参数传递给被调用的函数。
 
+使用 apply 和 call 方法改变 this 指向后原函数都会立即执行，且只是临时改变 this 指向一次。
+
 apply 的第二个参数是数组或者类数组，call 从第二个参数开始往后，每个参数被依次传入函数。
 
+### 🔴 bind 有什么特殊的点需要我们注意
+
+- bind 方法会创建一个新的函数，所以并不像 call, apply 那样函数会立即执行
+- 在 bind 被调用时，这个新函数的 this 被指定为 bind 的第一个参数，而其余参数将作为新函数的参数。
+- bind 的传参方式和 call 很相似，**但 bind 的参数列表可以分多次传入，最后函数运行时会把所有参数连接起来一起放入函数运行。**
+
+**示例**
+
+`bind()` 最简单的用法是创建一个函数，不论怎么调用，这个函数都有同样的 **`this`** 值。JavaScript 新手经常犯的一个错误是将一个方法从对象中拿出来，然后再调用，期望方法中的 `this` 是原来的对象（比如在回调中传入这个方法）。如果不做特殊处理的话，一般会丢失原来的对象。基于这个函数，用原始的对象创建一个绑定函数，巧妙地解决了这个问题：
+
+```js
+this.x = 9;    // 在浏览器中，this 指向全局的 "window" 对象
+const module = {
+  x: 81,
+  getX: function() { return this.x; }
+};
+
+module.getX(); // 81
+
+const retrieveX = module.getX;
+retrieveX(); // 返回 9 - 因为函数是在全局作用域中调用的
+
+// 创建一个新函数，把 'this' 绑定到 module 对象
+// 新手可能会将全局变量 x 与 module 的属性 x 混淆
+const boundGetX = retrieveX.bind(module);
+boundGetX(); // 81
+```
+
+在你想要为一个需要特定的 **`this`** 值的函数创建一个捷径（shortcut）的时候，`bind()` 也很好用。
+
+你可以用 [`Array.prototype.slice`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) 来将一个类似于数组的对象（array-like object）转换成一个真正的数组，就拿它来举例子吧。你可以简单地这样写：
+
+```js
+const slice = Array.prototype.slice;
+
+// ...
+
+slice.apply(arguments);
+```
+
+用 `bind()`可以使这个过程变得简单。在下面这段代码里面，`slice` 是 [`Function.prototype`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/prototype) 的 [`apply()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) 方法的绑定函数，并且将 `Array.prototype` 的 [`slice()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) 方法作为 **`this`** 的值。这意味着我们压根儿用不着上面那个 `apply()`调用了。
+
+```js
+// 与前一段代码的 "slice" 效果相同
+const unboundSlice = Array.prototype.slice;
+const slice = Function.prototype.apply.bind(unboundSlice);
+
+// ...
+
+slice(arguments);
+```
+
+### 🔴 函数柯里化相关
+
+函数柯里化的定义：在数学和计算机科学中，柯里化是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
+
+通过上面的定义可以看出，柯里化是一个函数返回另一个函数，这是一个典型的**闭包**，它封装了一部分不变的内容，然后去处理其他可变的数据
+
+例如我们在使用 ajax 的时候 url 是不变的，但是传递的参数不同将返回不同的数据，那么我们就可以把 url 封装到一个函数里然后返回一个带参数的函数，通过返回的函数去处理不同参数的情况。
+
+通用 curry 函数的实现：
+
+```js
+function add(a, b) {
+  return a + b;
+}
+// 执行 add 函数，需要每次都传入两个参数
+add(1, 2) // 3
+add(1, 3) // 4
+add(1, 4) // 5
+
+// 假设有一个 curry 函数可以做到柯里化
+function curry(fn, args) {
+  const length = fn.length;
+  args = args || [];
+
+  return function () {
+    const _args = args.slice(0), arg, i;
+
+    for (i = 0; i < arguments.length; i++) {
+      arg = arguments[i];
+      _args.push(arg);
+    }
+    if (_args.length < length) {
+      return curry.call(this, fn, _args);
+    } else {
+      return fn.apply(this, _args);
+    }
+  };
+}
+
+const addCurry = curry(add);
+const add1 = addCurry(1)
+// 只需传入一个参数
+add1(2)
+add1(3)
+add1(4)
+```
+
+
+
+### 🔴 进行多次.bind之后的结果
+
+进行多次.bind之后的结果，会指向第一个bind的地址。
+
+详细原因看一下 bind 的实现原理：
+
+```js
+Function.prototype.bind = function (context) {
+  if (typeof this !== "function") {
+    throw new Error("Function.prototype.bind - what is trying to be bound is not callable");
+  }
+
+  var self = this;
+  var bindArgs = Array.prototype.slice.call(arguments, 1); // 从第二个参数开始作为 bind 函数的参数 bindArgs
+  var fNOP = function () {};
+
+  var fbound = function () {
+    var args = bindArgs.concat(Array.prototype.slice.call(arguments)); // 后续添加的参数也会作为 bindArgs
+    self.apply(this instanceof self ? this : context, args);
+  }
+
+  fNOP.prototype = this.prototype;
+  fbound.prototype = new fNOP();
+
+  return fbound;
+}
+```
+
+如果清楚这部分实现，bind 两次的结果已经很明显了，在第一次 bind 完 this 就已经确定了，返回了一个函数出去，这个函数体内不存在 this 问题，后续无论 bind 多少次，this 都指向第一次 bind 传入的 context，但是后面 bind 再传入的其他参数会生效。
+
 ### 手写实现 call、apply 及 bind
+
+
 
 ## 9. 异步编程
 

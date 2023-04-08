@@ -257,3 +257,33 @@ if (route.query.config) {
 menu 下面有多个根节点，导致里面的 v-for 更新时出错，将外层不必要的 div 删掉后解决
 
 > 参考：https://github.com/nuxt/nuxt/issues/12735
+
+
+
+### Cannot read properties of null (reading ‘insertBefore‘)
+
+产生原因：通过 v-if 设置了 DOM 不显示，但是却对该 DOM 操作了。
+
+示例：
+
+```html
+<div
+  v-if="store.features.NativeGPU && !autoMode"
+  v-auth="104005"
+  class="ml-4"
+>
+</div>
+```
+
+v-if 中的值不显示，但是 Vue3 中自定义指令（也就是上述的 v-auth）却会执行 insertBefore 生命周期的操作，所以报错。
+
+改为：
+
+```html
+<div
+  v-if="store.features.NativeGPU && !autoMode && vauth(104005)"
+  class="ml-4"
+>
+</div>
+```
+
