@@ -250,6 +250,94 @@ if (route.query.config) {
 }
 ```
 
+### h 函数的使用
+
+h 函数也就是 createVNode，可以通过 `import { createVNode } from "vue"` 引入
+
+下面是一段 Modal.confirm 组件的使用
+
+```js
+import { Modal } from "ant-design-vue";
+import { createVNode, ref } from "vue";
+import { ExclamationCircleFilled } from "@ant-design/icons-vue";
+import Radio from "../components/Radio.vue";
+
+export const createConfirm = (
+  title,
+  callback: (checked: boolean) => void,
+  deviceCount?: number
+) => {
+  const checked = ref(true); // 存于闭包中
+  const content = createVNode(Radio, {
+    onChange: (value: boolean) => { // 监听 Radio 组件的事件
+      checked.value = value;
+    },
+    deviceCount,
+  });
+  Modal.confirm({
+    title,
+    icon: createVNode(ExclamationCircleFilled),
+    content,
+    okText: "确定",
+    cancelText: "取消",
+    centered: true,
+    width: 615,
+    onOk() {
+      callback(checked.value);
+    },
+  });
+};
+```
+
+content 通过 createVNode 来生成模版结构，Radio 组件会 emit 一个 change 事件，但我们需要通过 onChange 来监听
+
+这里的 Radio 是一个自己写的 .vue 组件
+
+```vue
+<template>
+  <div class="v-pool-radio mt-5">
+    <Radio v-model:checked="checked" @change="handleCheck">
+      1
+    </Radio>
+    <Radio v-model:checked="unchecked" @change="handleUncheck">
+      2
+    </Radio>
+  </div>
+</template>
+<script lang="ts" setup>
+import { Radio } from "ant-design-vue";
+import { ref } from "vue";
+defineOptions({
+  name: "VPoolRadio",
+});
+const emits = defineEmits(["change"]);
+const props = defineProps({
+  deviceCount: {
+    type: Number,
+  },
+});
+const checked = ref(true);
+const unchecked = ref(false);
+function handleCheck(e: any) {
+  if (e.target.checked) {
+    unchecked.value = false;
+  }
+  emits("change", checked.value);
+}
+function handleUncheck(e: any) {
+  if (e.target.checked) {
+    checked.value = false;
+  }
+  emits("change", checked.value);
+}
+</script>
+
+```
+
+注意组件内部不能直接写 `a-radio`，因为这样则不会经过编译，到了虚拟 DOM 中会直接变成 `<a-radio>` 而导致无法识别该标签，我们需要从 ant-design-vue 中直接引入编译后的 Radio 组件来作为标签
+
+
+
 ## 报错
 
 ### Failed to execute 'insertBefore' on 'Node': The node before which the new node is to be inserted is not a child of this node.

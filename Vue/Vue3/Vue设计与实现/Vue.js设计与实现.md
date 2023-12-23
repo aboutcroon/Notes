@@ -464,7 +464,7 @@ target
 
 关系如图所示：
 
-<img src="/Users/liuchang/Documents/markdown/学习/Vue3/Vue.js设计与实现.assets/4-3.png" alt="4-3" style="zoom:50%;" />
+![4-3](https://github.com/edwineo/Notes/blob/main/Vue/Vue3/Vue%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/assets/4-3.png?raw=true)
 
 
 
@@ -523,7 +523,7 @@ function trigger (target, key) {
 
 
 
-## 分支切换与cleanup
+## 分支切换与 cleanup
 
 切换分支的定义：
 
@@ -778,14 +778,6 @@ function trigger (target, key) {
 ```
 
 这样我们就能避免无限递归调用，从而避免栈溢出。
-
-
-
-## 调度执行
-
-可调度性：当 trigger 动作触发副作用函数重新执行时，有能力决定副作用函数执行的**时机**、**次数**以及**方式**
-
-可调度性是响应系统非常重要的特性
 
 
 

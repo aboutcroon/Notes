@@ -319,6 +319,8 @@ div 块级元素，width 自动为 100% 占满整行，但高度不会
 
 # 18. 业务
 
+## flex 定位
+
 父级元素可以使用 flex 定位，使内部绝对定位的子元素居中
 
 transform: translate 只能用于 block 元素
@@ -336,7 +338,11 @@ vite 中使用 background-image
 }
 ```
 
+## height: 100% 问题
 
+当父元素设置为 min-height: 100% 时，这时子元素设置成 height: 100% 也无法生效，那此时如何让子元素高度充满父元素呢？
+
+使用 flex，让父元素 flex，flex-direction: column，然后子元素 flex: 1 即可
 
 
 
@@ -359,3 +365,45 @@ line-height 可以直接继承父选择器的，但 height 不行，所以一般
 产生问题的原因
 
 ![ellipsis_gpt](https://raw.githubusercontent.com/edwineo/Notes/main/CSS/assets/ellipsis_gpt.png)
+
+
+
+# flex 布局中，保持内容不超出容器的方法
+
+父元素 flex: 1, overflow: hidden，子元素 width: 100%
+
+```html
+<div class="flex justify-between">
+  <!-- 左侧元素自适应，但不希望其超出最外层容器 -->
+  <div
+    class="flex items-center flex-1 overflow-hidden"
+    style="font-size: 16px"
+  >
+    <OverflowText
+      style="max-width: calc(100% - 24px)"
+      :lines="1"
+      :width="100"
+      unit="%"
+      :text="dataItem.title"
+    />
+    <i
+      class="iconfont icon-tubiao_zhexiantu"
+      style="font-size: 16px"
+    />
+  </div>
+  <!-- 右侧元素固定 -->
+  <div class="flex flex-shrink-0" style="margin-left: 40px">
+  	111 
+  </div>
+</div>
+```
+
+# 元素滚动到指定位置的方法
+
+文章：https://juejin.cn/post/7002227333776015367
+
+方法：
+
+scrollIntoView 会造成页面左右抖动
+
+scrollTop + offsetTop + scroll-behavior: smooth 比较灵活

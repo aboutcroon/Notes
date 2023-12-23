@@ -590,3 +590,33 @@ new Date(+new Date(null)+ 8 * 3600 * 1000).toISOString().replace(/T/g,' ').repla
 
 window.onresize 也需要解绑：window.onresize = ‘ ’
 
+
+
+## 检测滚动条
+
+检测一个 scroll 的 div 是否有滚动条，有滚动条时给右侧留个宽度
+
+```js
+// 如果超过高度需要滚动时，则右边留出滚动条的宽度
+const scrollWidth = ref(14);
+watch(
+  selectedController,
+  (val) => {
+    if (val && selectedServerList?.value?.length > 6) {
+      // 一定要在 nextTick 中，否则页面内容还未渲染
+      nextTick(() => {
+        const element: HTMLElement | null =
+          document.querySelector(".scroll-box");
+        if (element && element.offsetWidth !== element.clientWidth) {
+          // 计算滚动条的宽度
+          scrollWidth.value = element.offsetWidth - element.clientWidth + 14;
+        }
+      });
+    } else {
+      scrollWidth.value = 14;
+    }
+  },
+  { immediate: true }
+);
+```
+
